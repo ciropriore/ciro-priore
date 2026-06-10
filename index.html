@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ciro Priore</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:#fff;color:#000;font-family:'Archivo',sans-serif;font-size:13px}
+#wrap{display:grid;grid-template-columns:320px 1fr;position:fixed;top:34px;bottom:34px;left:0;right:0}
+
+/* ── LEFT ── */
+#left{height:100%;overflow-y:auto;padding:8px 0 8px;scrollbar-width:none;-ms-overflow-style:none;border-right:1px solid #000}
+#lh{padding:28px 28px 24px;position:sticky;top:0;background:#fff;z-index:5}
+.ln{font-size:13px;font-weight:700;color:#000;cursor:pointer;display:block;line-height:1.5}
+.ln:hover,.ln.on{opacity:1}
+.ln{font-size:13px;font-weight:700;color:#000;cursor:pointer;display:block;line-height:1.5}
+.ls{font-size:13px;font-weight:400;color:#000;cursor:pointer;display:block}
+.ls:hover,.ls.on{opacity:1}
+
+/* index */
+#idx{}
+.l0{display:block;padding:10px 28px 3px;font-size:13px;font-weight:700;color:#000;cursor:pointer;width:100%;text-align:left;background:none;border:none;font-family:inherit;letter-spacing:0;text-transform:none}
+.l0:hover,.l0.on{opacity:1}
+.l0b{display:none;margin-bottom:4px}
+.l0b.on{display:block}
+.l1{display:block;padding:4px 28px 2px 40px;font-size:13px;font-weight:400;color:#000;cursor:pointer;width:100%;text-align:left;background:none;border:none;font-family:inherit;letter-spacing:0;text-transform:none}
+.l1:hover,.l1.on{opacity:1}
+.l1b{display:none}
+.l1b.on{display:block}
+
+/* item rows */
+.item{display:block;padding:2px 28px 2px 52px;cursor:pointer;line-height:1.5}
+#idx.has-active .item:not(.on){display:none}
+.item-line{display:flex;align-items:baseline;gap:0}
+.item-code{font-size:10px;color:#000;width:80px;flex-shrink:0;font-variant-numeric:tabular-nums}
+.item-title{font-size:13px;font-weight:400;color:#000;line-height:1.5;flex:1}
+.item:hover .item-title{font-size:13px;font-weight:400;color:#000;line-height:1.5;flex:1}
+
+/* active item — expands */
+.item.on{padding-bottom:22px}
+.item.on .item-code{font-size:10px;color:#000;width:80px;flex-shrink:0;font-variant-numeric:tabular-nums}
+.item.on .item-title{font-weight:700;text-decoration:underline;display:inline;margin-bottom:0}
+.item-sub{display:none;font-size:13px;font-weight:400;color:#000;line-height:1.5;margin-bottom:0;padding-left:80px}
+.item.on .item-sub{display:block}
+.item-desc{display:none;font-size:13px;font-weight:400;color:#000;line-height:1.5;max-width:380px;padding-left:80px}
+.item.on .item-desc{display:block;font-size:13px;font-weight:400;color:#000;line-height:1.5;max-width:380px;padding-left:80px}
+.item-more{display:none;font-size:13px;font-weight:400;color:#000;cursor:pointer;margin-right:14px;text-decoration:underline;padding-left:80px}
+.item-more:hover{opacity:1}
+.item-related{display:none;font-size:13px;font-weight:400;color:#000;cursor:pointer;text-decoration:underline}
+.item-related:hover{opacity:1}
+.item.on .item-related{display:inline-block;font-size:13px;font-weight:400;color:#000;cursor:pointer;text-decoration:underline}
+.item.on .item-more{display:inline-block;font-size:13px;font-weight:400;color:#000;cursor:pointer;margin-right:14px;text-decoration:underline;padding-left:80px}
+.item-link{display:none;font-size:13px;font-weight:400;color:#000;text-decoration:underline}
+.item.on .item-link{display:inline-block;font-size:13px;font-weight:400;color:#000;text-decoration:underline}
+.item-link:hover{opacity:1}
+
+/* bio page */
+#bio-page{display:none;padding:0 28px}
+.bio-text{font-size:13px;line-height:1.5;max-width:440px}
+
+/* ── RIGHT ── */
+#right{height:100%;overflow-y:auto;padding:8px;scrollbar-width:none;-ms-overflow-style:none}
+#img-grid{
+  display:flex;
+  flex-direction:column;
+  gap:0;
+}
+.proj-group{
+  margin-bottom:0;
+}
+.proj-group-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  grid-auto-rows:calc((100vw - 320px - 3*8px) / 4 * 2 / 3);
+  gap:8px;
+}
+/* each cell: square-ish, white bg, black border */
+.cell{
+  background:#fff;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+  border:1px solid #000;
+}
+.cell.h1{}
+.cell.h2{grid-row:span 2}
+#left::-webkit-scrollbar,#right::-webkit-scrollbar,#right::-webkit-scrollbar{display:none}
+.cell img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;z-index:2}
+.cell-placeholder-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:10px;color:#000;font-family:'Archivo',sans-serif;text-align:center;pointer-events:none;line-height:1.4;white-space:nowrap;z-index:1;}
+.cell.revealed img{display:block}
+.cell.revealed{border:none}
+.cell.revealed:hover img{opacity:.8}
+/* empty cells: border + diagonal */
+.cell-empty{border:1px solid #000;background:#fff}
+.cell:hover{opacity:1}
+
+/* diagonal for empty slots */
+.cell-empty::after{
+  content:'';
+  position:absolute;inset:0;
+  background:
+    linear-gradient(to bottom right,
+      transparent calc(50% - .5px),
+      #000 calc(50% - .5px),
+      #000 calc(50% + .5px),
+      transparent calc(50% + .5px));
+}
+/* project label above each group */
+.proj-label{font-size:0;color:transparent;padding:34px 0 0;line-height:1.5;user-select:none;pointer-events:none}
+.proj-label:first-child{padding-top:8px}
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ciro Priore</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:#fff;color:#000;font-family:'Archivo',sans-serif;font-size:13px}
+#wrap{display:grid;grid-template-columns:320px 1fr;position:fixed;top:34px;bottom:34px;left:0;right:0}
+
+/* ── LEFT ── */
+#left{height:100%;overflow-y:auto;padding:8px 0 8px;scrollbar-width:none;-ms-overflow-style:none;border-right:1px solid #000}
+#lh{padding:28px 28px 24px;position:sticky;top:0;background:#fff;z-index:5}
+.ln{font-size:13px;font-weight:700;color:#000;cursor:pointer;display:block;line-height:1.5}
+.ln:hover,.ln.on{opacity:1}
+.ln{font-size:13px;font-weight:700;color:#000;cursor:pointer;display:block;line-height:1.5}
+.ls{font-size:13px;font-weight:400;color:#000;cursor:pointer;display:block}
+.ls:hover,.ls.on{opacity:1}
+
+/* index */
+#idx{}
+.l0{display:block;padding:10px 28px 3px;font-size:13px;font-weight:700;color:#000;cursor:pointer;width:100%;text-align:left;background:none;border:none;font-family:inherit;letter-spacing:0;text-transform:none}
+.l0:hover,.l0.on{opacity:1}
+.l0b{display:none;margin-bottom:4px}
+.l0b.on{display:block}
+.l1{display:block;padding:4px 28px 2px 40px;font-size:13px;font-weight:400;color:#000;cursor:pointer;width:100%;text-align:left;background:none;border:none;font-family:inherit;letter-spacing:0;text-transform:none}
+.l1:hover,.l1.on{opacity:1}
+.l1b{display:none}
+.l1b.on{display:block}
+
+/* item rows */
+.item{display:block;padding:2px 28px 2px 52px;cursor:pointer;line-height:1.5}
+#idx.has-active .item:not(.on){display:none}
+.item-line{display:flex;align-items:baseline;gap:0}
+.item-code{font-size:10px;color:#000;width:80px;flex-shrink:0;font-variant-numeric:tabular-nums}
+.item-title{font-size:13px;font-weight:400;color:#000;line-height:1.5;flex:1}
+.item:hover .item-title{font-size:13px;font-weight:400;color:#000;line-height:1.5;flex:1}
+
+/* active item — expands */
+.item.on{padding-bottom:22px}
+.item.on .item-code{font-size:10px;color:#000;width:80px;flex-shrink:0;font-variant-numeric:tabular-nums}
+.item.on .item-title{font-weight:700;text-decoration:underline;display:inline;margin-bottom:0}
+.item-sub{display:none;font-size:13px;font-weight:400;color:#000;line-height:1.5;margin-bottom:0;padding-left:80px}
+.item.on .item-sub{display:block}
+.item-desc{display:none;font-size:13px;font-weight:400;color:#000;line-height:1.5;max-width:380px;padding-left:80px}
+.item.on .item-desc{display:block;font-size:13px;font-weight:400;color:#000;line-height:1.5;max-width:380px;padding-left:80px}
+.item-more{display:none;font-size:13px;font-weight:400;color:#000;cursor:pointer;margin-right:14px;text-decoration:underline;padding-left:80px}
+.item-more:hover{opacity:1}
+.item-related{display:none;font-size:13px;font-weight:400;color:#000;cursor:pointer;text-decoration:underline}
+.item-related:hover{opacity:1}
+.item.on .item-related{display:inline-block;font-size:13px;font-weight:400;color:#000;cursor:pointer;text-decoration:underline}
+.item.on .item-more{display:inline-block;font-size:13px;font-weight:400;color:#000;cursor:pointer;margin-right:14px;text-decoration:underline;padding-left:80px}
+.item-link{display:none;font-size:13px;font-weight:400;color:#000;text-decoration:underline}
+.item.on .item-link{display:inline-block;font-size:13px;font-weight:400;color:#000;text-decoration:underline}
+.item-link:hover{opacity:1}
+
+/* bio page */
+#bio-page{display:none;padding:0 28px}
+.bio-text{font-size:13px;line-height:1.5;max-width:440px}
+
+/* ── RIGHT ── */
+#right{height:100%;overflow-y:auto;padding:8px;scrollbar-width:none;-ms-overflow-style:none}
+#img-grid{
+  display:flex;
+  flex-direction:column;
+  gap:0;
+}
+.proj-group{
+  margin-bottom:0;
+}
+.proj-group-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  grid-auto-rows:calc((100vw - 320px - 3*8px) / 4 * 2 / 3);
+  gap:8px;
+}
+/* each cell: square-ish, white bg, black border */
+.cell{
+  background:#fff;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+  border:1px solid #000;
+}
+.cell.h1{}
+.cell.h2{grid-row:span 2}
+#left::-webkit-scrollbar,#right::-webkit-scrollbar,#right::-webkit-scrollbar{display:none}
+.cell img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
+.cell.revealed img{display:block}
+.cell.revealed{border:none}
+.cell.revealed:hover img{opacity:.8}
+/* empty cells: border + diagonal */
+.cell-empty{border:1px solid #000;background:#fff}
+.cell:hover{opacity:1}
+
+/* diagonal for empty slots */
+.cell-empty::after{
+  content:'';
+  position:absolute;inset:0;
+  background:
+    linear-gradient(to bottom right,
+      transparent calc(50% - .5px),
+      #000 calc(50% - .5px),
+      #000 calc(50% + .5px),
+      transparent calc(50% + .5px));
+}
+/* project label above each group */
+.proj-label{font-size:0;color:transparent;padding:34px 0 0;line-height:1.5;user-select:none;pointer-events:none}
+.proj-label:first-child{padding-top:8px}
+
+
+/* ── CUSTOM SCROLLBAR DOTS ── */
+.scroll-dot{position:fixed;width:6px;height:6px;border-radius:50%;background:#000;pointer-events:none;z-index:300;transition:top .08s linear;display:none}
+#scroll-dot-left{left:8px}
+#scroll-dot-right{right:8px}
+body.mo-mode .scroll-dot{background:#fff}
+
+/* ── TOP BAR ── */
+#tb{position:fixed;top:0;left:0;right:0;height:34px;background:#fff;border-bottom:1px solid #000;display:flex;align-items:center;padding:0 28px;z-index:200}
+.tbi{font-size:13px;font-weight:400;color:#000;cursor:pointer;margin-right:20px}
+.tbi.on{font-weight:700}
+body.mo-mode #tb{background:#000;border-bottom:1px solid #fff}
+body.mo-mode .tbi{color:#fff}
+body.mo-mode{background:#000;color:#fff}
+body.mo-mode #lh{background:#000}
+body.mo-mode #bn{background:#000;border-top:1px solid #333}
+body.mo-mode .ln,.mo-mode .ls,.mo-mode .l0,.mo-mode .l1,.mo-mode .item,.mo-mode .item-title,.mo-mode .item-code,.mo-mode .item-sub,.mo-mode .item-desc,.mo-mode .item-more,.mo-mode .item-link,.mo-mode .item-related,.mo-mode .bn-mail{color:#fff}
+body.mo-mode .item:hover .item-title{color:#fff}
+body.mo-mode .item.on .item-title{color:#fff}
+body.mo-mode .cell{background:#000;border:1px solid #fff}
+body.mo-mode .cell-empty{background:#000;border:1px solid #fff}
+body.mo-mode .cell.revealed{border:1px solid #fff}
+body.mo-mode #search-overlay{background:#000}
+body.mo-mode #search-input{border-bottom:1px solid #fff;color:#fff}
+body.mo-mode .search-result{border-bottom:1px solid #fff !important;color:#fff !important}
+body.mo-mode .search-result span{color:#fff !important}
+body.mo-mode .cell-placeholder-label{color:#fff}
+body.mo-mode .cell-empty::after{background:linear-gradient(to bottom right,transparent calc(50% - .5px),#fff calc(50% - .5px),#fff calc(50% + .5px),transparent calc(50% + .5px))}
+body.mo-mode #modal-inner{background:#000;border:1.5px solid #fff;color:#fff}
+body.mo-mode #modal-title{color:#fff}
+body.mo-mode #modal-text{color:#fff}
+body.mo-mode #modal-close{color:#fff}
+body.mo-mode #lb{background:rgba(0,0,0,.92)}
+body.mo-mode #lb-inner{background:#000;border:1.5px solid #fff}
+body.mo-mode #lb-x,body.mo-mode #lb-p,body.mo-mode #lb-n,body.mo-mode #lb-c{color:#fff}
+body.mo-mode .proj-label{color:transparent}
+
+/* ── CP/MO PAGE BN ACTIVE ── */
+#bn.cp-active #bn-cp,#bn.cpidx-active #bn-cpidx,#bn.mo-active #bn-mo,#bn.moidx-active #bn-moidx{font-weight:700}
+#bn{position:fixed;bottom:0;left:0;right:0;height:34px;background:#fff;border-top:1px solid #000;display:flex;align-items:center;padding:0 28px;z-index:200}
+.bni{font-size:13px;font-weight:400;color:#000;cursor:pointer;margin-right:20px}
+.bni:hover{opacity:1}
+.bn-gap{flex:1}
+.bn-mail{font-size:13px;font-weight:400;color:#000}
+body.mo-mode #bn{border-top:1px solid #fff}
+body.mo-mode .bni,.mo-mode .bn-mail{color:#fff}
+
+/* ── COLUMN SEPARATOR ── */
+body.mo-mode #left{border-right:1px solid #fff}
+
+/* ── MODAL ── */
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.15);display:none;align-items:center;justify-content:center;z-index:500}
+#modal.on{display:flex}
+#modal-inner{background:#fff;border:1.5px solid #000;max-width:580px;width:calc(100% - 80px);max-height:80vh;overflow-y:auto;position:relative;padding:36px 40px 40px}
+#modal-close{position:absolute;top:16px;right:20px;font-size:18px;cursor:pointer;opacity:1;line-height:1.5}
+#modal-close:hover{opacity:1}
+#modal-title{font-size:13px;font-weight:700;margin-bottom:12px;text-decoration:underline}
+#modal-text{font-size:13px;font-weight:400;line-height:1.5;color:#000}
+
+/* ── LIGHTBOX ── */
+#lb{position:fixed;inset:0;background:rgba(255,255,255,.85);display:none;align-items:center;justify-content:center;z-index:999}
+#lb.on{display:flex}
+#lb-inner{border:1.5px solid #000;background:#fff;position:relative;max-width:90vw;max-height:90vh;display:flex;align-items:center;justify-content:center}
+#lb-img{max-width:88vw;max-height:88vh;object-fit:contain;display:block}
+#lb-x{position:absolute;top:-32px;right:0;font-size:18px;cursor:pointer;opacity:1;line-height:1.5;color:#000}
+#lb-x:hover{opacity:1}
+#lb-p,#lb-n{position:fixed;top:50%;transform:translateY(-50%);color:#000;font-size:28px;cursor:pointer;opacity:1;padding:16px;user-select:none}
+#lb-p{left:14px}#lb-n{right:14px}
+#lb-p:hover,#lb-n:hover{opacity:1}
+#lb-c{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);color:#000;font-size:11px;opacity:1;letter-spacing:.08em}
+</style>
+</head>
+<body>
+
+<div id="lb" onclick="lbOvl(event)">
+  <span id="lb-p" onclick="lbNav(-1,event)">&#x2039;</span>
+  <div id="lb-inner">
+    <span id="lb-x" onclick="lbClose()">&#x2715;</span>
+    <img id="lb-img" src="" alt="">
+  </div>
+  <span id="lb-n" onclick="lbNav(1,event)">&#x203a;</span>
+  <div id="lb-c"></div>
+</div>
+
+<div id="scroll-dot-left" class="scroll-dot"></div>
+
+<div id="tb">
+  <span class="tbi" id="tb-cp" onclick="showCP()">Ciro Priore</span>
+  <span class="tbi" id="tb-mo" onclick="showMO()">Materia Ordinaria</span>
+  <span style="flex:1"></span>
+  <span class="tbi" id="tb-search" onclick="toggleSearch()">Search</span>
+</div>
+
+<div id="search-overlay" style="display:none;position:fixed;top:34px;bottom:34px;left:0;right:0;background:#fff;z-index:150;padding:28px 40px;overflow-y:auto">
+  <input id="search-input" type="text" placeholder="Search…" autocomplete="off"
+    style="width:100%;font-size:13px;font-family:'Archivo',sans-serif;border:none;border-bottom:1px solid #000;outline:none;padding:0 0 8px;background:transparent;color:#000">
+  <div id="search-results" style="margin-top:24px"></div>
+</div>
+
+<div id="wrap">
+  <div id="left">
+    <div id="bio-page"></div>
+    <div id="idx"></div>
+  </div>
+  <div id="right">
+    <div id="img-grid"></div>
+    <div id="bio-right"></div>
+  </div>
+</div>
+
+<!-- CP bio page (full width, two columns) -->
+<div id="cp-page" style="display:none;position:fixed;top:34px;bottom:34px;left:0;right:0;background:#fff;z-index:100;overflow-y:auto;">
+  <div style="display:grid;grid-template-columns:320px 1fr;min-height:100%">
+    <div style="padding:34px 28px 34px;border-right:1px solid #000">
+      <div style="font-size:13px;font-weight:400;line-height:1.7" id="cp-bio-text"></div>
+    </div>
+    <div style="padding:34px 40px 34px">
+      <div style="font-size:13px;font-weight:400;line-height:1.7" id="cp-statement-text"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MO bio page (full width, two columns, black bg) -->
+<div id="mo-page" style="display:none;position:fixed;top:34px;bottom:34px;left:0;right:0;background:#000;z-index:100;overflow-y:auto;">
+  <div style="display:grid;grid-template-columns:320px 1fr;min-height:100%">
+    <div style="padding:34px 28px 34px;border-right:1px solid #fff">
+      <div style="font-size:13px;font-weight:400;line-height:1.7;color:#fff" id="mo-bio-text"></div>
+    </div>
+    <div style="padding:34px 40px 34px">
+      <div style="font-size:13px;font-weight:400;line-height:1.7;color:#fff" id="mo-statement-text"></div>
+    </div>
+  </div>
+</div>
+
+<div id="bn">
+  <span class="bni" id="bn-cp" onclick="showCP()">CP</span>
+  <span class="bni on" id="bn-cpidx" onclick="showIdx('ciro')">CP Index</span>
+  <span class="bni" id="bn-mo" onclick="showMO()">MO</span>
+  <span class="bni" id="bn-moidx" onclick="showIdx('mo')">MO Index</span>
+  <span class="bn-gap"></span>
+  <span class="bn-mail">ciro.priore@unina.it</span>
+</div>
+
+<script>
+var I_000000140009="";
+var I_IMG_0171="";
+var I_IMG_2461="";
+var I_IMG_2465="";
+var I_IMG_2484="";
+var I_IMG_2490="";
+var I_IMG_2504="";
+var I_IMG_9996="";
+var I_int_des_st____poster_04="";
+
+var D = {
+  ciro:{
+    bio:"Ciro Priore is an architect and PhD, based in Naples. He is lecturer in Interior Design Studio at the University of Naples Federico II. Co-founder of Materia Ordinaria Architetti. His research moves between domestic space, food systems, and urban ecology. Author of 40+ publications. Participated in the Italian Pavilion at the Venice Architecture Biennale 2025.",
+    sections:[
+      {k:'pub',l:'Publications',subs:[
+        {k:'rja',l:'[RJA] Refereed Journal Articles',items:[
+          {code:'[35-RJA]',t:'Autocostruzione come autodeterminazione',sub:'OFFICINA, 50, 2025. (Class A)',d:'',layout:['h','h'],imgs:["img/35RJA/35RJA1.jpg","img/35RJA/35RJA2.jpg"]},
+          {code:'[32-RJA]',t:'Forest and Architecture. Strategie di convivenza e di cooperazione possibili',sub:'with Buonanno, D. — ESEMPI DI ARCHITETTURA, Special Issue, 2024. (Class A)',draft:true,d:'This work is not yet available for public release. It will be accessible soon.',imgs:[]},
+          {code:'[28-RJA]',t:'New York, Breuer Building vendesi: un progetto di datamuseo',sub:'DOCOMOMO ITALIA, 36, 2023. (Class A)',d:'',layout:["v","h","v","h"],imgs:["img/28RJA/28RJA1.jpg","img/28RJA/28RJA2.jpg","img/28RJA/28RJA3.jpg","img/28RJA/28RJA4.jpg"]},
+          {code:'[29-JA]',t:'Kitsch Kitchen',sub:'VICEVERSA, 10, 2023. [English]',d:'The essay investigates the kitchen as a site of architectural excess, taking El Internacional — conceived by Antoni Miralda and Montse Guillén on West Broadway, New York, in 1984 — as its central case study.',link:'https://viceversamagazine.com/article/kitsch-kitchen/',layout:['v','h','h','h','v','h','h'],imgs:["img/29JA/29JA1.jpg", "img/29JA/29JA2.jpg", "img/29JA/29JA3.jpg", "img/29JA/29JA4.jpg", "img/29JA/29JA5.gif", "img/29JA/29JA6.jpg", "img/29JA/29JA7.jpg"]},
+          {code:'[25-RJA]',t:'Speculazione in bikini. Domitio Studios e la reinterpretazione del litorale',sub:'with Russo, M. — LARGO DUOMO, 9, 2023.',d:'',layout:['h','h','h','h','h'],imgs:["img/25RJA/25RJA1.jpg","img/25RJA/25RJA2.jpg","img/25RJA/25RJA3.jpg","img/25RJA/25RJA4.jpg","img/25RJA/25RJA5.jpg"]},
+          {code:'[18-RJA]',t:'Ampliamento della galleria d\u2019arte Z33 a Hasselt, Belgio',sub:"L'INDUSTRIA DELLE COSTRUZIONI, 484, 2022. (Class A)",d:'',layout:["v","h","h","h","h"],imgs:["img/18RJA/18RJA1.jpg","img/18RJA/18RJA2.jpg","img/18RJA/18RJA3.jpg","img/18RJA/18RJA4.jpg","img/18RJA/18RJA5.jpg"]},
+          {code:'[04-RJA]',t:'Villaggio Italia',sub:'with Russo, M. — SIN MARCA, 7, 2020.',d:'',layout:["v","h","h","h","h"],imgs:["img/04RJA/04RJA1.jpg","img/04RJA/04RJA2.jpg","img/04RJA/04RJA3.jpg","img/04RJA/04RJA4.jpg","img/04RJA/04RJA5.jpg"],related:'[03-EXH] Villaggio Italia — N\u00f3veN\u00f3veN\u00f3ve'}
+        ]},
+        {k:'rcp',l:'[RCP] Refereed Conference Proceedings',items:[
+          {code:'[33-RCP]',t:'Dust Bowl: Agricultural Production in the American Great Plains',sub:'in Calatrava, J. et al. (eds.), Comida y Arquitectura, Universidad de Granada, 2025.',d:'',layout:['h','h','h','h'],imgs:["img/33RCP/33RCP1.jpg","img/33RCP/33RCP2.jpg","img/33RCP/33RCP3.jpg","img/33RCP/33RCP4.jpg"]},
+          {code:'[31-RCP]',t:'Architetture de bon go\u00fbt. Cibo e propaganda alla corte di Francia',sub:'in Allegretti, G. et al. (eds.), Crossroads | Incroci, Accademia Adrianea Edizioni, Rome, 2024.',d:'',layout:['h','v','h','h','h','h'],imgs:["img/31RCP/31RCP1.jpg","img/31RCP/31RCP2.jpg","img/31RCP/31RCP3.jpg","img/31RCP/31RCP4.jpg","img/31RCP/31RCP5.jpg","img/31RCP/31RCP6.jpg"]},
+          {code:'[30-RCP]',t:'A domicilio. La delocalizzazione della cucina',sub:'in Marini S. et al. (eds.), Per una nuova casa italiana, Pisa University Press, 2024.',d:'',layout:['h','h','h','h'],imgs:["img/30RCP/30RCP1.jpg","img/30RCP/30RCP2.jpg","img/30RCP/30RCP3.jpg","img/30RCP/30RCP4.jpg"]},
+          {code:'[20-RCP]',t:'Vitaminico e rurale. Appunti per una masseria condominiale',sub:'in Lanini, L. et al. (eds.), Per una nuova casa italiana, Pisa University Press, 2022.',d:'',layout:['h','h','h'],imgs:["img/20RCP/20RCP1.jpg","img/20RCP/20RCP2.jpg","img/20RCP/20RCP3.jpg"]},
+          {code:'[09-RCP]',t:'All you can eat: per una dimensione domestica di produzione alimentare',sub:'in Leveratto, J. et al. (eds.), Interni: Nuove geografie della ricerca, Maggioli Editore, 2021.',d:'',layout:['h','v','h','v','h'],imgs:["img/09RCP/09RCP1.jpg","img/09RCP/09RCP2.jpg","img/09RCP/09RCP3.gif","img/09RCP/09RCP4.jpg","img/09RCP/09RCP5.jpg"]},
+          {code:'[08-RCP]',t:'Spazio senza mediazioni. Il fenomeno come metafora dell\u2019incontro',sub:'in Bocchi, R. et al. (eds.), Instalaciones art\u00edsticas, Ediciones Universidad de Valladolid, 2021.',d:'',layout:['v','h','h','h'],imgs:["img/08RCP/08RCP1.jpg","img/08RCP/08RCP2.jpg","img/08RCP/08RCP3.jpg","img/08RCP/08RCP4.jpg"]},
+          {code:'[03-RCP]',t:'Per una capillare reinterpretazione del modello Domitio',sub:"with Russo, M. — in Cafiero, G. et al. (eds.), Costruire l'abitare contemporaneo, Il Poligrafo, 2020.",d:'',imgs:[]},
+          {code:'[02-RCP]',t:'Strategie di sovrascrittura: nuovi ordini e relazioni sul/nel litorale Domitio',sub:'with Russo, M. — in Calderoni, A. et al. (eds.), Il progetto di architettura come intersezione di saperi, ProArch, 2019.',d:'',layout:['h','h'],imgs:["img/02RCP/02RCP1.jpg","img/02RCP/02RCP2.jpg"]}
+        ]},
+        {k:'bc',l:'[BC] Book Chapters',items:[
+          {code:'[37-BC]',t:'Una casa che cresce. La Street Farmhouse di Graham Caine',sub:'in Zanotto, F. (ed.), Difformit\u00e0. Progetti vulnerabili, Mimesis Edizioni, 2025.',d:'',layout:["v", "h", "v", "e", "e", "e"],imgs:["img/37BC/37BC1.jpg", "img/37BC/37BC2.jpg", "img/37BC/37BC3.jpg"]},
+          {code:'[36-BC]',t:'Making Citizenship: gestures, places, and relationships for living with abandonment',sub:'in Casalbordino, F. et al. (eds.), Research Tools and Methods\u2026, Crat\u00e8ra Edizioni, 2025.',d:'',imgs:[]},
+          {code:'',t:'Per un\u2019architettura Swishable',sub:'with Russo, M. — Scarto Zine n. 3, Filoferro Architetti / Concretipo.',d:'Per un\u2019architettura Swishable is an essay written with Martina Russo for Scarto Zine n. 3, edited by Filoferro Architetti and published by Concretipo.<br><br>The concept of affections is necessarily linked to the memory of places we have inhabited and architectures we have consumed. It develops over time, sharpening our sensitivity towards our landscapes. We have been taught that seeing differs from looking \u2014 and all these glances we have scattered throughout our time pile up in more or less orderly fashion to be retrieved in our brief memory, perhaps constituting a method. Through experience, a process akin to the maniacal is activated: where everything finds its reason, or where, at least, one attempts to uncover the reason for everything. A collection of autobiographical notes fills the pages of a retroactive diary of anonymous and notable projects. These architectures are preserved and become part of an interior catalogue of knowledge \u2014 of electric impulses which, assembled, constitute the core of every architect.<br><br><strong>Published in</strong><br>Scarto Zine n. 3, Filoferro Architetti / Concretipo<br><br><strong>Authors</strong><br>Ciro Priore, Martina Russo<br><br><strong>Contributors</strong><br>Francesco Caneschi, Collettivo Jarfalla, Giulio Margheri \u2013 Caret Studio, Materia Ordinaria, Laura Mucciolo, Rispoli Guerrera',layout:["v", "h", "h", "v", "h", "v", "e", "e", "e"],imgs:["", "", "", "", "", ""]},
+          {code:'[34-BC]',t:'Studio Albori: la necessit\u00e0 del necessario',sub:'in Flora, N.; Iarrusso, F.; Priore, C. (eds.), Sperimentare per ri/abitare le aree interne, LetteraVentidue, Siracusa, 2022.',d:'',layout:["v"],imgs:["img/34BC/34BC1.jpg"]},
+          {code:'[24-BC]',t:'Spazi di relazione',sub:'with Casalino, F.; Russo, M. — in Scuole-citt\u00e0, Federico II University Press, 2023.',d:'',imgs:[]},
+          {code:'[23-BC]',t:'Muro Immaginifico in mostra',sub:'with Di Criscio, J. — in Muro immaginifico. Arte e architettura tra Italia e Spagna, LetteraVentidue, Siracusa, 2023.',d:'',layout:["v","h","h","h"],imgs:["img/23BC/23BC1.jpg","img/23BC/23BC2.jpg","img/23BC/23BC3.jpg","img/23BC/23BC4.jpg"]},
+          {code:'[21-BC]',t:"L'architettura dell'Io relazionale",sub:'with Parisi, L. et al. — in Opera in quattro parti, LetteraVentidue, Siracusa, 2022.',d:'',layout:["v","h","h","h","h","h","h","h"],imgs:["img/21BC/21BC1.jpg","img/21BC/21BC2.jpg","img/21BC/21BC3.jpg","img/21BC/21BC4.jpg","img/21BC/21BC5.jpg","img/21BC/21BC6.jpg","img/21BC/21BC7.jpg","img/21BC/21BC8.jpg"]},
+          {code:'[19-BC]',t:'La casa di Robertino. Fare esperienza attraverso la carne',sub:'in Casalino, F.; Nicolai, L. (eds.), Con-tatto con il mondo costruito, Vita Nostra Edizioni, Rome, 2022.',d:'',layout:['h','h'],imgs:["img/19BC/19BC1.jpg","img/19BC/19BC2.jpg"]},
+          {code:'[17-BC]',t:'Percorso, ambiente, comunit\u00e0',sub:"with Russo, M. — in Per una nuova cura dell'abitare, Federico II University Press, 2022.",d:'',imgs:[]},
+          {code:'[14-BC]',t:'Progetti sperimentali per il centro storico di Riccia',sub:'in Flora, N.; Iarrusso, F.; Priore, C. (eds.), Sperimentare per ri/abitare le aree interne, LetteraVentidue, Siracusa, 2022.',d:'',layout:["v", "h", "h", "h", "h", "h", "h", "h", "h", "h", "h", "h", "e", "e", "e"],imgs:["", "", "", "", "", "", "", "", "", "", "", ""]},
+          {code:'[11-BC]',t:'Momentanee conclusioni',sub:'with Flora, N.; Iarrusso, F. — in Flora, N.; Iarrusso, F.; Priore, C. (eds.), Sperimentare per ri/abitare le aree interne, LetteraVentidue, Siracusa, 2022.',d:'',layout:['h'],imgs:["img/11BC/11BC1.jpg"]},
+          {code:'[07-BC]',t:'Dialogo con Leonardo Caffo',sub:'with Caffo, L.; Lazazzera, M. — in Marzilli, F.; Sorrentino, A. (eds.), Cosa faremo dopo il Covid-19, Lulu.com, 2021.',d:'',layout:['h'],imgs:["img/07BC/07BC1.jpg"]},
+          {code:'[01-BC]',t:'Domitio Deliveroo',sub:'with Russo, M. — in Spontaneous: do-it-yourself domesticity, Libr\u00eca, Melfi, 2018.',d:'',layout:["v","h","h"],imgs:["img/01BC/01BC1.jpg","img/01BC/01BC2.jpg","img/01BC/01BC3.jpg"]}
+        ]},
+        {k:'ev',l:'[EV] Edited Volumes',items:[
+          {code:'[38-EV]',t:'Arbosfera. Ripensare lo Spazio Urbano Attraverso la Foresta',sub:'with Buonanno, D.; Saitto, V. — Crat\u00e8ra Edizioni, Naples, 2026, 583 pp.',draft:true,d:'This work is not yet available for public release. It will be accessible soon.',imgs:[]},
+          {code:'[16-EV]',t:'Sperimentare per ri/abitare le aree interne',sub:'with Flora, N.; Iarrusso, F. — LetteraVentidue, Siracusa, 375 pp., 2022.',d:'',layout:['v','v'],imgs:["img/16EV/16EV1.jpg","img/16EV/16EV2.jpg"]}
+        ]},
+        {k:'mm',l:'[MM] Multimedia',items:[
+          {code:'[26-MM]',t:'Traccia audiozine, \u00abBeep!!!\u00bb',sub:'Issue 2, 2023. tracciazine.com',d:'',layout:['h'],imgs:["img/26MM/26MM1.mp4"]},
+          {code:'[10-MM]',t:'Traccia audiozine, \u00abDI-A-DA-IN-CON-SU-PER-TRA-FRA\u00bb',sub:'Issue 1, 2021. tracciazine.com',d:'',layout:['h','v','v'],imgs:["img/10MM/10MM1.mp4","img/10MM/10MM2.jpg","img/10MM/10MM3.mov"]}
+        ]},
+        {k:'int',l:'[INT] Introductions / Prefaces',items:[
+          {code:'[40-INT]',t:'A patto che. Note per un\u2019arbosfera aperta',sub:'in Arbosfera, Crat\u00e8ra Edizioni, Naples, 2026.',draft:true,d:'This work is not yet available for public release. It will be accessible soon.',imgs:[]},
+          {code:'[39-INT]',t:'La foresta come spazio di negoziazione multispecie',sub:'with Vannelli, G. — in Arbosfera, Crat\u00e8ra Edizioni, 2026.',draft:true,d:'This work is not yet available for public release. It will be accessible soon.',imgs:[]},
+          {code:'[22-INT]',t:'Sibilla Chillida. Elogio all\u2019antro',sub:'in Bocchi, R. et al. (eds.), Muro immaginifico, LetteraVentidue, Siracusa, 2023.',d:'',related:'Muro Immaginifico',layout:["v","h","h","h","h"],imgs:["img/22INT/22INT1.jpg","img/22INT/22INT2.jpg","img/22INT/22INT3.jpg","img/22INT/22INT4.jpg","img/22INT/22INT5.jpg"]},
+          {code:'[05-INT]',t:'Introduzione',sub:'with Lazazzera, M. — in Cosa faremo dopo il Covid-19, Lulu.com, 2021.',d:'',imgs:[]}
+        ]}
+      ]},
+      {k:'res',l:'Research Projects & Activities',subs:[
+        {k:'phd',l:'Doctoral Research',items:[
+          {code:'[PhD]',t:'All You Can Eat: Domestic Space and Food Production',sub:'PhD \u2014 Sapienza University of Rome, 2020\u20132024. Ottimo con Lode.',d:'The thesis investigates the kitchen and domestic interior as a site where food systems, urban agriculture, and collective life become spatially legible.',imgs:[]}
+        ]},
+        {k:'proj',l:'[PROJ] Competitively Funded Research Projects',items:[
+          {code:'[15-PROJ]',t:'GRINS: Growing Resilient, Inclusive and Sustainable',sub:'Research fellow, June\u2013September 2025. PNRR Missione 4 \u2014 P09.',d:'University of Naples Federico II, Department of Civil, Architectural and Environmental Engineering, Spoke 7 \u2014 Territorial Sustainability.',imgs:[]},
+          {code:'[12-PROJ]',t:'RightTT: The Right Tree in the Right Town',sub:'Postdoctoral Research Fellow, 2024\u20132025. PRIN 2022 PNRR.',d:'University of Naples Federico II / University of Palermo.',imgs:[]}
+        ]},
+        {k:'lab',l:'[LAB] Research Laboratories / Applied Research',items:[
+          {code:'[14-LAB]',t:'Mussels Tales',sub:'Research participant, April\u2013June 2025. CHANGES \u2014 PNRR.',d:'Research and Design Laboratory on Mussel Farming Landscapes. CHANGES \u2014 Cultural Heritage Active Innovation for Sustainable Society, PNRR Spoke 1-WP4. PI: Prof. Michelangelo Russo.',layout:["v", "h", "h", "v", "h", "v", "h", "v", "h", "v", "h", "v", "h", "e"],imgs:["", "", "", "", "", "", "", "", "", "", "", "", ""]},
+          {code:'[10-LAB]',t:'DiARC \u2014 Fondazione San Gennaro / Associazione LAPS',sub:'Institutional partner (as Vice-President of LAPS), 2021\u20132026.',d:'Research and Design Collaboration Agreement. Federico II / Fondazione di Comunit\u00e0 San Gennaro / LAPS. Scientific Coordinator: Prof. Nicola Flora.',imgs:[]},
+          {code:'[07-LAB]',t:'DiARC \u2014 Associazione Pessoa',sub:'Research collaborator, 2021\u20132026.',d:'Research and Design Collaboration Agreement. Federico II / Associazione Pessoa \u2014 Collettivo Culturale. Scientific Coordinators: Prof. Eduardo Bassolino, Prof. Viviana Saitto.',imgs:[]},
+          {code:'[02-LAB]',t:'Lux Boxe: L\u2019Istituto Ozanam si trasforma per la comunit\u00e0',sub:'Research group member, September 2018. Pilot Research Project.',d:'University of Naples Federico II / Universidad de Castilla-La Mancha. Scientific Coordinators: Prof. Juan Ignacio Mera, Prof. Nicola Flora.',layout:['v','h','h','h','h','v','h','h','h','v','h','h','h','h','v','h','h','h'],imgs:["img/02LAB/02LAB1.jpg","img/02LAB/02LAB2.jpg","img/02LAB/02LAB3.jpg","img/02LAB/02LAB4.jpg","img/02LAB/02LAB5.jpg","img/02LAB/02LAB6.jpg","img/02LAB/02LAB7.jpg","img/02LAB/02LAB8.jpg","img/02LAB/02LAB9.jpg","img/02LAB/02LAB10.jpg","img/02LAB/02LAB11.jpg","img/02LAB/02LAB12.jpg","img/02LAB/02LAB13.jpg","img/02LAB/02LAB14.jpg","img/02LAB/02LAB15.jpg","img/02LAB/02LAB16.jpg","img/02LAB/02LAB17.jpg","img/02LAB/02LAB18.jpg"]}
+        ]},
+        {k:'dout',l:'[DOUT] Design Outputs / Applied Research',items:[
+          {code:'[13-DOUT]',t:'La Rocchia',sub:'2025 \u00b7 Temporary installation, Lago Fusaro, Bacoli.',d:'Within CHANGES. In collaboration with Mussels Tales, Francesca Gotti, Lemonot, Caterina Viguera.',layout:['v','h','h','v','h','v','h','v','h','v','h','h'],imgs:["img/13DOUT/13DOUT1.jpg","img/13DOUT/13DOUT2.jpg","img/13DOUT/13DOUT3.jpg","img/13DOUT/13DOUT4.jpg","img/13DOUT/13DOUT5.jpg","img/13DOUT/13DOUT6.jpg","img/13DOUT/13DOUT7.jpg","img/13DOUT/13DOUT8.jpg","img/13DOUT/13DOUT9.jpg","img/13DOUT/13DOUT10.jpg","img/13DOUT/13DOUT11.jpg","img/13DOUT/13DOUT12.jpg"]},
+          {code:'[11-DOUT]',t:'pIpPO \u2014 Piccole Infrastrutture per il Parco di Ponticelli',sub:'2026 \u00b7 Self-build installation, Naples.',d:'Within PRIN 2022 PNRR \u2013 RightTT. In collaboration with Prof. Daniela Buonanno.',layout:['v','h','h','h','h','h','v','h','h','h','h','h'],imgs:["img/11DOUT/11DOUT1.jpg","img/11DOUT/11DOUT2.jpg","img/11DOUT/11DOUT3.jpg","img/11DOUT/11DOUT4.jpg","img/11DOUT/11DOUT5.jpg","img/11DOUT/11DOUT6.jpg","img/11DOUT/11DOUT7.jpg","img/11DOUT/11DOUT8.jpg","img/11DOUT/11DOUT9.jpg","img/11DOUT/11DOUT10.jpg","img/11DOUT/11DOUT11.jpg","img/11DOUT/11DOUT12.jpg"]},
+          {code:'[08-DOUT]',t:'Arredo contenitore per urne cinerarie',sub:'2021 \u00b7 Furniture design, Naples.',d:'Basilica di Santa Maria alla Sanit\u00e0. Client: Fondazione San Gennaro.',layout:['v','h','v','v','h'],imgs:["img/08DOUT/08DOUT1.jpg","img/08DOUT/08DOUT2.jpg","img/08DOUT/08DOUT3.jpg","img/08DOUT/08DOUT4.jpg","img/08DOUT/08DOUT5.jpg"]},
+          {code:'[06-DOUT]',t:'Disconauta',sub:'2022 \u00b7 Temporary installation, Naples.',d:'Pessoa Luna Park. Within DiARC\u2013Associazione Pessoa Research Agreement.',layout:['v','h','v','h','h','v','h','v','v','h','v'],imgs:["img/P069/P0691.jpg","img/P069/P0692.jpg","img/P069/P0693.jpg","img/P069/P0694.jpg","img/P069/P0695.jpg","img/P069/P0696.jpg","img/P069/P0697.jpg","img/P069/P0698.jpg","img/P069/P0699.gif","img/P069/P06910.jpg","img/P069/P06911.jpg"]},
+          {code:'[05-DOUT]',t:'CaravanPessoa',sub:'2022 \u00b7 Temporary installation, Salerno.',d:'Pessoa Luna Park. Within DiARC\u2013Associazione Pessoa Research Agreement.',layout:['h','v','h','v','h'],imgs:["img/05DOUT/05DOUT1.jpg","img/05DOUT/05DOUT2.jpg","img/05DOUT/05DOUT3.jpg","img/05DOUT/05DOUT4.jpg","img/05DOUT/05DOUT5.jpg"]},
+          {code:'[04-DOUT]',t:'PalCo Santo',sub:'2018 \u00b7 Temporary installation, Naples.',d:'Basilica di Santa Maria alla Sanit\u00e0. Client: Fondazione San Gennaro. Within DiARC\u2013Fondazione San Gennaro.',layout:['v','h','h','h'],imgs:["img/04DOUT/04DOUT1.jpg","img/04DOUT/04DOUT2.jpg","img/04DOUT/04DOUT3.jpg","img/04DOUT/04DOUT4.jpg"]},
+          {code:'[03-DOUT]',t:'Moriana Park',sub:'2018 \u00b7 Sculpture, Antilia Gallery, Naples.',d:'Aluminium and electric cable sculpture. Exhibited internationally (Mirabilia 2018, 2019, 2020; N\u00f3veN\u00f3veN\u00f3ve 2019).',related:'Il giardino delle sculture volanti | Moriana Park \u2014 Mirabilia Bitonto | Moriana Park \u2014 Mirabilia, Casa Cava',layout:['h','h','h','h','h','h','h','h','h'],imgs:["img/03DOUT/03DOUT1.jpg","img/03DOUT/03DOUT2.jpg","img/03DOUT/03DOUT3.jpg","img/03DOUT/03DOUT4.jpg","img/03DOUT/03DOUT5.jpg","img/03DOUT/03DOUT6.jpg","img/03DOUT/03DOUT7.jpg","img/03DOUT/03DOUT8.jpg","img/03DOUT/03DOUT9.jpg"]},
+          {code:'[01-DOUT]',t:'/con.c\u00e8t.ta/ nome proprio di sedia',sub:'2016 \u00b7 Product design, Naples.',d:'Winner of the Siedimi Competition. As 72:H collective.',layout:['v','h','v','v','h','v','v','v','h','v','v','v'],imgs:["img/01DOUT/01DOUT1.jpg","img/01DOUT/01DOUT2.jpg","img/01DOUT/01DOUT3.jpg","img/01DOUT/01DOUT4.jpg","img/01DOUT/01DOUT5.jpg","img/01DOUT/01DOUT6.jpg","img/01DOUT/01DOUT7.jpg","img/01DOUT/01DOUT8.jpg","img/01DOUT/01DOUT9.jpg","img/01DOUT/01DOUT10.jpg","img/01DOUT/01DOUT11.jpg","img/01DOUT/01DOUT12.jpg"]}
+        ]},
+        {k:'eb',l:'Editorial & Scientific Boards',items:[
+          {code:'[04-EB]',t:'BLOB \u2014 Book Series',sub:'Editorial board member, 2024\u2013present. Crat\u00e8ra, Naples.',d:'',layout:['h','v','h','h','h','v','h'],imgs:["img/04EB/04EB1.jpg","img/04EB/04EB2.jpg","img/04EB/04EB3.jpg","img/04EB/04EB4.jpg","img/04EB/04EB5.jpg","img/04EB/04EB6.jpg","img/04EB/04EB7.jpg"]},
+          {code:'[03-RB]',t:'\u00c0mbiti \u2014 Book Series',sub:'Editorial staff member, 2024\u2013present. Libria, Melfi.',d:'',imgs:[]},
+          {code:'[02-RB]',t:'Terraformazioni \u2014 Book Series',sub:'Editorial staff member, 2022\u20132025. Crat\u00e8ra, Naples.',d:'',imgs:[]},
+          {code:'[01-EB]',t:'Traccia \u2014 Online Architecture Audio-Magazine',sub:'Editorial board member, 2022\u2013present. tracciazine.com',d:'',imgs:[]}
+        ]}
+      ]},
+      {k:'tch',l:'Teaching Experience',subs:[
+        {k:'lect',l:'[LECT] Lecturer \u2014 [TUT] Affiliated Tutor',items:[
+          {code:'[04-LECT]',t:'Lecturer \u2014 Interior Design Studio',sub:'2024\u2013ongoing \u00b7 MSc Design for Built Environment, Federico II.',d:'Studio teaching structured around making and self-build: physical models as design instruments, iterative fabrication, and the direct link between material decision and spatial consequence.',layout:['v','h','v','h','v','h','v','h','v','e','e'],imgs:["", "", "", "", "", "", "", "", ""]},
+          {code:'[02-TUT]',t:'Affiliated Tutor \u2014 Interior Architecture',sub:'2018\u20132025 \u00b7 University of Naples Federico II.',d:'Interior Architecture; Final Synthesis Laboratory; Interior Design Studio. Supervisor: Prof. Nicola Flora.',imgs:[]},
+          {code:'[01-TUT]',t:'Affiliated Tutor \u2014 Architectural Design',sub:'2022\u20132023 \u00b7 Sapienza University of Rome.',d:'Laboratory of Architectural Design II. Supervisor: Prof. Andrea Grimaldi.',imgs:[]}
+        ]},
+        {k:'mt',l:'[MT] Master\u2019s Thesis Co-supervision',items:[
+          {code:'[10-MT]',t:'Alta Densit\u00e0: strategie progettuali per farsi spazio nella foresta urbana',sub:'2025 \u00b7 Alessia Barberini. Supervisor: Prof. Daniela Buonanno.',d:'',imgs:[]},
+          {code:'[09-MT]',t:'Un nuovo ingresso per il Parco Fratelli De Filippo',sub:'2025 \u00b7 Domenico Ilardi. Supervisor: Prof. Daniela Buonanno.',d:'',imgs:[]},
+          {code:'[02-MT]',t:'Un Community Hub al Rione Sanit\u00e0',sub:'2024 \u00b7 Angela Salzano; Marco Tedesco. Supervisor: Prof. Nicola Flora.',d:'',imgs:[]}
+        ]},
+        {k:'bt',l:'[BT] Bachelor\u2019s Thesis Co-supervision',items:[
+          {code:'[08-BT]',t:'Sottoscala: architettura scomponibile per lo street food',sub:'2025 \u00b7 Giorgia Di Lorenzo. Supervisor: Prof. Nicola Flora.',d:'',imgs:[]},
+          {code:'[07-BT]',t:'Sottoscala: dispositivi pubblici per Pomigliano d\u2019Arco',sub:'2024 \u00b7 Simona Coppola. Supervisor: Prof. Nicola Flora.',d:'',imgs:[]},
+          {code:'[06-BT]',t:'Cloud Kitchen: progettazione di una dark kitchen in un parco verde',sub:'2024 \u00b7 Giovanna Capone. Supervisor: Prof. Nicola Flora.',d:'',imgs:[]},
+          {code:'[05-BT]',t:'The Common Grill',sub:'2024 \u00b7 Sara De Pascale. Supervisor: Prof. Nicola Flora.',d:'',imgs:[]},
+          {code:'[04-BT]',t:'DiaphanouSpace',sub:'2024 \u00b7 Alessia Bifulco. Supervisor: Prof. Nicola Flora.',d:'',imgs:[]},
+          {code:'[03-BT]',t:'Costruire con e nell\u2019esistente: progetto di un punto vendita e cucina di prodotti locali a Scafati',sub:'2024 \u00b7 Arianna De Luca; Pietro Iovane. Supervisor: Prof. Nicola Flora.',d:'',imgs:[]},
+          {code:'[01-BT]',t:'Casa sulle pergole: capanno per artista a Capodimonte',sub:'2023 \u00b7 Marcella Leone. Supervisor: Prof. Nicola Flora.',d:'',imgs:[]}
+        ]},
+        {k:'ws',l:'Workshops & Self-build',items:[
+          {code:'[67-WS]',t:'Utopie Situate Design Jam',sub:'2026 \u00b7 Design workshop, tutor. Federico II, Naples.',d:'',layout:['h','h','h','h'],imgs:["img/67WS/67WS1.jpg","img/67WS/67WS2.jpg","img/67WS/67WS3.jpg","img/67WS/67WS4.jpg"]},
+          {code:'[55-WS]',t:'Robert Capa en Entrev\u00edas',sub:'2024 \u00b7 International design workshop, tutor. Universidad de Castilla-La Mancha, Toledo.',d:'',layout:['h'],imgs:["img/55WS/55WS1.jpg"]},
+          {code:'[53-WS]',t:'Up-Living Lampedusa',sub:'2023 \u00b7 Doctoral design workshop. Federico II / Sapienza.',d:'',layout:['h'],imgs:["img/53WS/53WS1.jpg"]},
+          {code:'[51-WS]',t:'40orex04cfu \u2014 Capanno per Artista a Capodimonte',sub:'2023 \u00b7 Design workshop. Federico II, Naples.',d:'',layout:['h','h','h'],imgs:["img/51WS/51WS1.jpg","img/51WS/51WS2.jpg","img/51WS/51WS3.jpg"]},
+          {code:'[39-WS]',t:'Progettare per autocostruire',sub:'2022 \u00b7 Doctoral design workshop. Federico II / Sapienza.',d:'',layout:['h'],imgs:["img/39WS/39WS1.jpg"]},
+          {code:'[36-WS]',t:'Utopie Situate Design Jam',sub:'2022 \u00b7 Design workshop, tutor. Federico II, Naples.',d:'',layout:['h','h','h','h'],imgs:["img/36WS/36WS1.jpg","img/36WS/36WS2.jpg","img/36WS/36WS3.jpg","img/36WS/36WS4.jpg"]},
+          {code:'[33-SS]',t:'ArchInForest',sub:'2022 \u00b7 Summer school. Federico II, Naples.',d:'',layout:['h'],imgs:["img/33SS/33SS1.jpg"]},
+          {code:'[04-WS]',t:'Mobile Workshop 05',sub:'2018 \u00b7 Design workshop. Federico II, Naples.',d:'',layout:['h','h','h','h'],imgs:["img/04WS/04WS1.jpg","img/04WS/04WS2.jpg","img/04WS/04WS3.jpg","img/04WS/04WS4.jpg"]},
+          {code:'[03-SS]',t:'Shuffle Space',sub:'2018 \u00b7 Summer school. Federico II / Toc Centre / Labuat.',d:'',layout:['h'],imgs:["img/03SS/03SS1.jpg"]}
+        ]}
+      ]},
+      {k:'evtp',l:'Academic Events Participations',subs:[
+        {k:'inv',l:'[INV] Invited Talks',items:[
+          {code:'[29-INV]',t:'Urban Forestry in Naples: a case study',sub:'2025 \u00b7 Beautifying Cities Through Greening Conference, LUPT Federico II.',d:'',imgs:[]},
+          {code:'[25-INV]',t:'Domitio Studios',sub:'2025 \u00b7 Invited speaker at Laboratorio del Progetto di Interni, DiARC Federico II.',d:'',imgs:[]},
+          {code:'[23-INV]',t:'Sperimentare per Ri-abitare le Aree Interne',sub:'2024 \u00b7 Invited speaker at Master ARINT di II Livello, DiARC Federico II.',d:'',imgs:[]},
+          {code:'[22-INV]',t:'Domitio Studios',sub:'2024 \u00b7 Naples Design Week \u2014 Cratera Readings, DiARC Federico II.',d:'',layout:['h'],imgs:["img/22INV/22INV1.jpg"]},
+          {code:'[21-INV]',t:'Housing experiments for food collectivization',sub:'2023 \u00b7 Hackathon: Rethinking Food Systems in the Anthropocene, DiARC Federico II.',d:'',layout:['h','h','h'],imgs:["img/21INV/21INV1.jpg","img/21INV/21INV2.jpg","img/21INV/21INV3.jpg"]},
+          {code:'[18-INV]',t:'Produzione, formazione. “Fare riviste” tra scuola e progetto',sub:'2023 · Invited speaker. Iuav University of Venice.',d:'Iuav University of Venice, Ca’ Tron Garden | May 2022. Participation in the international seminar cycle on architectural publishing curated by the Pard Publishing Center. Presented “Traccia,” an experimental audio-magazine, in a dialogue regarding the role of independent publishing in contemporary architectural education and research.',layout:['h','h','h'],imgs:["img/18INV/18INV1.jpg","img/18INV/18INV2.jpg","img/18INV/18INV3.jpg"]},
+          {code:'[11-INV]',t:'Virtuale vs Reale \u2014 La percezione dello spazio',sub:'2020 \u00b7 Invited speaker (as Materia Ordinaria). Parete Art Museum / Antilia Gallery.',d:'',layout:['h','h'],imgs:["img/11INV/11INV1.jpg","img/11INV/11INV2.jpg"]},
+          {code:'[06-INV]',t:'La luna e altre imperfezioni',sub:'2019 \u00b7 Invited talk, Sette Microlectures, DiARC Federico II.',d:'',imgs:[]},
+          {code:'[01-INV]',t:'Concetta: nome proprio di sedia',sub:'2017 \u00b7 Invited speaker, NABA, Milan.',d:'',imgs:[]}
+        ]},
+        {k:'conf',l:'[CONF] Conference Papers',items:[
+          {code:'[30-CONF]',t:'Making Citizenship: Gestures, Places, and Relationships to Inhabit Abandonment',sub:'2025 \u00b7 Rivelazioni, Federico II. Selected.',d:'',imgs:[]},
+          {code:'[28-CONF]',t:'Dust Bowl: Agricultural Production in the American Great Plains',sub:'2025 \u00b7 V Congreso Internacional, UGR Granada. Selected.',d:'',layout:['h','h','h','h'],imgs:["img/28CONF/28CONF1.jpg","img/28CONF/28CONF2.jpg","img/28CONF/28CONF3.jpg","img/28CONF/28CONF4.jpg"]},
+          {code:'[20-CONF]',t:'Architetture di Bon Go\u00fbt: politiche decorative nelle arti culinarie',sub:'2023 \u00b7 Crossroads IV, Turin. Selected.',d:'',imgs:[]},
+          {code:'[19-CONF]',t:'A domicilio. La delocalizzazione della cucina',sub:'2023 \u00b7 III Convegno Casa Italiana, Venice. Selected.',d:'',layout:['h'],imgs:["img/19CONF/19CONF1.jpg"]},
+          {code:'[16-CONF]',t:'Spazio senza mediazioni. Il fenomeno come metafora dell\u2019incontro',sub:'2021 \u00b7 Espaciar 2021, Valladolid / Iuav. Selected.',d:'',imgs:[]},
+          {code:'[12-CONF]',t:'All you can eat. Per una dimensione domestica di produzione alimentare',sub:'2021 \u00b7 Interni: nuove geografie della ricerca, Sapienza. Selected.',d:'',layout:['h','h','h'],imgs:["img/12CONF/12CONF1.jpg","img/12CONF/12CONF2.jpg","img/12CONF/12CONF3.jpg"]},
+          {code:'[08-CONF]',t:'Per una capillare reinterpretazione del modello Domitio',sub:'2020 \u00b7 III Convegno Nazionale di Architettura degli Interni, Federico II. Selected.',d:'',layout:['h','h','h'],imgs:["img/08CONF/08CONF1.jpg","img/08CONF/08CONF2.jpg","img/08CONF/08CONF3.jpg"]},
+          {code:'[05-CONF]',t:'Strategie di sovrascrittura: nuovi ordini e relazioni sul/nel litorale Domitio',sub:'2019 · VIII Forum ProArch, Federico II. Selected.',d:'',layout:['h'],imgs:["img/05CONF/05CONF1.jpg"]}
+        ]},
+        {k:'mod',l:'[MOD] Moderator / [DISC] Discussant',items:[
+          {code:'[24-MOD]',t:'Arbosfera: Ripensare lo spazio urbano attraverso la foresta',sub:'2025 \u00b7 International conference, scientific secretary and session chair. Federico II.',d:'',imgs:[]},
+          {code:'[17-INV]',t:'Drawing for Placemaking',sub:'2023 \u00b7 Discussant. Dottorato di Ricerca, Federico II.',d:'',imgs:[]},
+          {code:'[14-INV]',t:'Cosa faremo dopo il Covid-19',sub:'2021 \u00b7 Discussant. Sapienza University of Rome.',d:'',layout:['h'],imgs:["img/14INV/14INV1.jpg"]},
+          {code:'[13-INV]',t:'New Generations Festival \u2014 Archizines Review ep. 02',sub:'2021 \u00b7 Invited speaker. Real Accademia di Spagna a Roma.',d:'',layout:['h','h','h','h'],imgs:["img/13INV/13INV1.jpg","img/13INV/13INV2.jpg","img/13INV/13INV3.jpg","img/13INV/13INV4.jpg"]}
+        ]},
+        {k:'exh',l:'[EXH] Exhibitions',items:[
+          {code:'[27-EXH]',t:'Architectural and Landscape design-based Dialogue to Refine Research Question',sub:'2025 \u00b7 International group exhibition, by invitation. University of Palermo. Curated by Luciana Macaluso.',d:'',imgs:[]},
+          {code:'[26-EXH]',t:'Domitio Studios \u2014 Venice Architecture Biennale 2025',sub:'2025 \u00b7 Italian Pavilion \u2014 Terrae Aquae. Selected.',d:'',imgs:[]},
+          {code:'[15-EXH]',t:'Sibilla Chillida in Muro Immaginifico',sub:'2021 \u00b7 Group exhibition, co-curator and participant. Chiostro dei Tolentini, Venice.',d:'',imgs:[]},
+          {code:'[10-EXH]',t:'Moriana Park \u2014 Il giardino delle sculture volanti',sub:'2020 \u00b7 International group exhibition, by invitation. Parete Art Museum.',d:'',layout:['v','h','v'],imgs:["img/10EXH/10EXH1.jpg","img/10EXH/10EXH2.jpg","img/10EXH/10EXH3.jpg"]},
+          {code:'[09-EXH]',t:'Recreation Live \u2014 Don\u2019t try this at home',sub:'2020 \u00b7 International group exhibition, by invitation. Online.',d:'',layout:['h','h'],imgs:["img/09EXH/09EXH1.jpg","img/09EXH/09EXH2.jpg"]},
+          {code:'[07-EXH]',t:'Moriana Park \u2014 Mirabilia, Casa Cava',sub:'2020 \u00b7 International group exhibition, by invitation. Casa Cava, Matera.',d:'',layout:['v','h','h'],imgs:["img/07EXH/07EXH1.jpg","img/07EXH/07EXH2.jpg","img/07EXH/07EXH3.jpg"]},
+          {code:'[03-EXH]',t:'Villaggio Italia \u2014 N\u00f3veN\u00f3veN\u00f3ve',sub:'2019 \u00b7 International group exhibition, by invitation. Torre del Castello Melodia, Ruvo di Puglia.',d:'Villaggio Italia investigates the spatial and cultural consequences of mass tourism on the Italian territory. Developed from research begun during the master’s thesis on the Domitio coastline, the project reads the holiday village as a symptomatic urban type: a model of domesticity compressed, repeated and detached from its context, designed for temporary occupation and disposable experience.<br><br>The installation proposes a critical and dystopian portrait of a country increasingly shaped by the tourism industry — a “holiday-on-display” in which micro-visions of an Italy devoted to the vacation economy open up. It raises questions about the sustainability of these dynamics and their cultural, economic and environmental consequences on local identities and territorial equilibria.<br><br>Presented at the group exhibition <em>Mutazioni</em>, part of the Nòve Nòve Nòve festival, Ruvo di Puglia, 2019. Curated by Antilia Gallery.',related:'Villaggio Italia \u2014 N\u00f3veN\u00f3veN\u00f3ve | [04-RJA] Villaggio Italia',layout:["v", "h", "h", "v", "h", "h", "v", "h", "h", "h", "v", "h", "h", "v", "h", "h", "h", "e", "e"],imgs:["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
+          {code:'[02-EXH]',t:'Moriana Park \u2014 Mirabilia Bitonto',sub:'2018 \u00b7 International group exhibition, by invitation. Torrione Angioino, Bitonto.',d:'',layout:['v','h','h','v','h'],imgs:["img/02EXH/02EXH1.jpg","img/02EXH/02EXH2.jpg","img/02EXH/02EXH3.jpg","img/02EXH/02EXH4.jpg","img/02EXH/02EXH5.jpg"]},
+          {code:'[04-INV]',t:'Terminalia: cantieri nomadi di Monte S. Martino',sub:'2019 \u00b7 Summer school, invited participant. Monte San Martino.',d:'',imgs:[]},
+          {code:'[01-SEM]',t:'Incompiuto: la nascita di uno stile',sub:'2017 \u00b7 Seminar, co-curator and moderator. Federico II / 72:H / Incompiuto Siciliano.',d:'',layout:['h','h','h','h','h','h','h'],imgs:["img/01SEM/01SEM1.jpg","img/01SEM/01SEM2.jpg","img/01SEM/01SEM3.jpg","img/01SEM/01SEM4.jpg","img/01SEM/01SEM5.jpg","img/01SEM/01SEM6.jpg","img/01SEM/01SEM7.jpg"]},
+          {code:'[02-SEM]',t:'Pixel Society: Collaborative Processes',sub:'2017 \u00b7 Seminar, co-curator and moderator. Palazzo Reale / Futuro Remoto, Federico II.',d:'',layout:['h','h','h','h'],imgs:["img/02SEM/02SEM1.jpg","img/02SEM/02SEM2.jpg","img/02SEM/02SEM3.jpg","img/02SEM/02SEM4.jpg"]}
+        ]}
+      ]},
+      {k:'evto',l:'Academic Events Organization',subs:[
+        {k:'gl',l:'[GL] Guest Lectures',items:[
+          {code:'[68-GL]',t:'Patrimoni 2.0 by Analogique Studio',sub:'2026 \u00b7 Guest lecture, scientific coordinator. Federico II.',d:'',layout:['v'],imgs:["img/68GL/68GL1.jpg"]},
+          {code:'[64-GL]',t:'Superfurniture: stories of space-generating objects by Viviana Saitto',sub:'2025 \u00b7 Guest lecture, scientific coordinator. Federico II.',d:'',layout:['h'],imgs:["img/64GL/64GL1.jpg"]},
+          {code:'[63-GL]',t:'Learning from Context: the Case Studies of the Vasto District by Paola Scala',sub:'2025 \u00b7 Guest lecture, scientific coordinator. Federico II.',d:'',layout:['h'],imgs:["img/63GL/63GL1.jpg"]},
+          {code:'[47-GL]',t:'L\u2019esperienza del fare: Architettura e pragmatismo nell\u2019opera di Walter Segal by Niccol\u00f2 Di Virgilio',sub:'2023 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/47GL/47GL1.jpg"]},
+          {code:'[45-GL]',t:'Le dimensioni non contano: Enorme Studio by Carmelo Rodriguez',sub:'2022 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/45GL/45GL1.jpg"]},
+          {code:'[44-GL]',t:'Una idea di Architettura by Matteo Costanzo',sub:'2022 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',imgs:[]},
+          {code:'[43-GL]',t:'Enfolding / Unfolding by Uriel Fogu\u00e8',sub:'2022 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/43GL/43GL1.jpg"]},
+          {code:'[41-GL]',t:'Charcoal and Silver: Lampens by Enrico Miglietta',sub:'2022 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/41GL/41GL1.jpg"]},
+          {code:'[40-GL]',t:'Lampens: Construing through Drawing by Jo Van Den Berghe',sub:'2022 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/40GL/40GL1.jpg"]},
+          {code:'[37-GL]',t:'Similarities and Variations by Knut Hjeltnes',sub:'2022 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/37GL/37GL1.jpg"]},
+          {code:'[32-GL]',t:'La poetica del limite by Gianfranco Tuzzolino',sub:'2021 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/32GL/32GL1.jpg"]},
+          {code:'[30-GL]',t:'Una puerta en Toledo: Di\u00e1logo entre escuelas by Juan Ignacio Mera',sub:'2021 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/30GL/30GL1.jpg"]},
+          {code:'[28-GL]',t:'Bricolo Falsarella: Progettare domande by Filippo Bricolo',sub:'2021 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/28GL/28GL1.jpg"]},
+          {code:'[27-GL]',t:'Educazione non convenzionale e architettura by Giacomo Borella',sub:'2021 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/27GL/27GL1.jpg"]},
+          {code:'[24-GL]',t:'Minimi e morali by Francesca Iarrusso and Domenico Rapuano',sub:'2021 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/24GL/24GL1.jpg"]},
+          {code:'[23-GL]',t:'Digital Craft: Virtual Bottega Experience by Rossella Siani',sub:'2021 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/23GL/23GL1.jpg"]},
+          {code:'[22-GL]',t:"L'Architettura degli Interni o dell'abitare lo spazio by Andrea Grimaldi",sub:'2021 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',imgs:[]},
+          {code:'[21-GL]',t:"Mobile Stages for Vinicio Capossela's Sponzfest by Vincenzo Tenore",sub:'2021 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',imgs:[]},
+          {code:'[20-GL]',t:'Guido Canali: Abitare l\u2019esistente by Valeria Sansoni',sub:'2021 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',imgs:[]},
+          {code:'[19-GL]',t:'Design and Build by Marino Amodio',sub:'2021 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/19GL/19GL1.jpg"]},
+          {code:'[18-GL]',t:'Domesticazioni by Vincenzo Tenore',sub:'2021 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/18GL/18GL1.jpg"]},
+          {code:'[17-GL]',t:'By Developing a Construction System by Mario Pagliaro',sub:'2021 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/17GL/17GL1.jpg"]},
+          {code:'[16-GL]',t:'RES Story: Scenical Machines for Music by Sergio Pone',sub:'2021 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/16GL/16GL1.jpg"]},
+          {code:'[15-GL]',t:'Active-Bent Timber Gridshell by Daniele Lancia',sub:'2021 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/15GL/15GL1.jpg"]},
+          {code:'[14-GL]',t:'Sovrapporsi by Enrico Scaramellini',sub:'2021 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/14GL/14GL1.jpg"]},
+          {code:'[12-GL]',t:'La poetica della restrizione by Franco Comerci',sub:'2020 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/12GL/12GL1.jpg"]},
+          {code:'[11-GL]',t:'Pendio e razionalit\u00e0: la scuola Svizzera a Naples di Dolf Schnebli by Isotta Forni',sub:'2020 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/11GL/11GL1.jpg"]},
+          {code:'[10-GL]',t:'Case by Sandro Raffone',sub:'2020 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/10GL/10GL1.jpg"]},
+          {code:'[09-GL]',t:'Cinque by Marino Amodio',sub:'2020 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/09GL/09GL1.jpg"]},
+          {code:'[08-GL]',t:'La citt\u00e0 e il bambino by Giovanni Menna',sub:'2020 \u00b7 Guest lecture, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/08GL/08GL1.jpg"]}
+        ]},
+        {k:'sem',l:'[SEM] Seminars',items:[
+          {code:'[60-SEM]',t:'Humanizing Architecture',sub:'2024 \u00b7 Seminar, organizing secretary. Federico II.',d:'',imgs:[]},
+          {code:'[57-SEM]',t:'Il verde a servizio della cittadinanza: utopie e fattibilit\u00e0',sub:'2024 \u00b7 Seminar, organizing secretary. RightTT, Federico II / Palermo, Portici.',d:'',layout:['h'],imgs:["img/57SEM/57SEM1.jpg"]},
+          {code:'[56-SEM]',t:'Forestazione al tempo del PNRR',sub:'2024 \u00b7 Seminar, organizing secretary. RightTT, Federico II.',d:'',layout:['h'],imgs:["img/56SEM/56SEM1.jpg"]},
+          {code:'[49-SEM]',t:'La tematizzazione del tema: il metodo della memoria dimenticata',sub:'2023 \u00b7 Seminar, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/49SEM/49SEM1.jpg"]},
+          {code:'[48-SEM]',t:'Casi/e studio: Ciclo di interventi sull\u2019idea di domestico',sub:'2023 \u00b7 Seminar, organizing secretary and speaker. Federico II.',d:'',layout:['h'],imgs:["img/48SEM/48SEM1.jpg"]},
+          {code:'[42-SEM]',t:'Drawing for Placemaking',sub:'2022 \u00b7 Seminar, organizing secretary and discussant. Federico II.',d:'',layout:['h'],imgs:["img/42SEM/42SEM1.jpg"]},
+          {code:'[13-SEM]',t:'Parole per progettare',sub:'2020 \u00b7 Seminar, organizing secretary and speaker. Federico II.',d:'',layout:['h'],imgs:["img/13SEM/13SEM1.jpg"]},
+          {code:'[05-SEM]',t:'Per Caso / Dentro',sub:'2019 \u00b7 Seminar, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/05SEM/05SEM1.jpg"]}
+        ]},
+        {k:'conf2',l:'[CONF] Conferences',items:[
+          {code:'[62-CONF]',t:'Arbosfera: Ripensare lo spazio urbano attraverso la foresta',sub:'2025 \u00b7 International conference, scientific secretary. RightTT, DiARC Federico II.',d:'',layout:['h','v','v','v'],imgs:["img/62CONF/62CONF1.jpg","img/62CONF/62CONF2.jpg","img/62CONF/62CONF3.jpg","img/62CONF/62CONF4.jpg"]},
+          {code:'[58-CONF]',t:'Unconventional Affordable Housing',sub:'2024 \u00b7 Conference, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/58CONF/58CONF1.jpg"]},
+          {code:'[34-CONF]',t:'Sperimentare la rigenerazione con le persone: G124 con Renzo Piano',sub:'2022 \u00b7 National conference, organizing secretary. Federico II / Fondazione San Gennaro.',d:'',layout:['h'],imgs:["img/34CONF/34CONF1.jpg"]},
+          {code:'[25-CONF]',t:'Dentro e fuori',sub:'2021 \u00b7 Conference, organizing secretary. Federico II.',d:'',layout:['h'],imgs:["img/25CONF/25CONF1.jpg"]},
+          {code:'[06-CONF]',t:'Costruire l\u2019abitare contemporaneo \u2014 III National Conference on Interior Architecture',sub:'2020 \u00b7 National conference, organizing secretary. Federico II / Sapienza / Politecnico Torino / Politecnico Milano / Iuav.',d:'',layout:['h','h','h','h','h','h','h','h'],imgs:["img/06CONF/06CONF1.jpg","img/06CONF/06CONF2.jpg","img/06CONF/06CONF3.jpg","img/06CONF/06CONF4.jpg","img/06CONF/06CONF5.jpg","img/06CONF/06CONF6.jpg","img/06CONF/06CONF7.jpg","img/06CONF/06CONF8.jpg"]}
+        ]},
+        {k:'ws2',l:'[WS] Workshops & [SS] Summer Schools',items:[
+          {code:'[66-SS]',t:'Heritage and Landscape Design Summer School \u2014 Il Ventre della Balena',sub:'2025 \u00b7 Summer school, scientific committee member. Federico II / AIAPP / ACE, Reggio Calabria.',d:'',layout:['h'],imgs:["img/66SS/66SS1.jpg"]},
+          {code:'[55-WS2]',t:'Robert Capa en Entrev\u00edas',sub:'2024 \u00b7 International design workshop, tutor. Universidad de Castilla-La Mancha, Toledo.',d:'',imgs:[]},
+          {code:'[53-WS2]',t:'Up-Living Lampedusa',sub:'2023 \u00b7 Doctoral design workshop. Federico II / Sapienza.',d:'',imgs:[]},
+          {code:'[51-WS2]',t:'40orex04cfu \u2014 Capanno per Artista a Capodimonte',sub:'2023 \u00b7 Design workshop, tutor. Federico II.',d:'',imgs:[]},
+          {code:'[39-WS2]',t:'Progettare per autocostruire',sub:'2022 \u00b7 Doctoral design workshop. Federico II / Sapienza.',d:'',layout:['h'],imgs:["img/39WS/39WS1.jpg"]},
+          {code:'[36-WS2]',t:'Utopie Situate Design Jam',sub:'2022 \u00b7 Design workshop, tutor. Federico II.',d:'',layout:['h'],imgs:["img/36WS/36WS1.jpg"]},
+          {code:'[33-SS2]',t:'ArchInForest',sub:'2022 \u00b7 Summer school, tutor. Federico II.',d:'',layout:['h'],imgs:["img/33SS/33SS1.jpg"]},
+          {code:'[07-WS2]',t:'Mobile Workshop 06',sub:'2020 \u00b7 Design workshop, tutor. Federico II.',d:'',layout:['h'],imgs:["img/07WS/07WS1.jpg"]},
+          {code:'[04-WS2]',t:'Mobile Workshop 05',sub:'2018 \u00b7 Design workshop, tutor. Federico II.',d:'',imgs:[]},
+          {code:'[03-SS2]',t:'Shuffle Space',sub:'2018 \u00b7 Summer school, tutor. Federico II / Toc Centre / Labuat.',d:'',imgs:[]}
+        ]},
+        {k:'exh2',l:'[EXH] Exhibitions Organized',items:[
+          {code:'[52-EXH]',t:'Fuori Congresso: Lost Landscapes',sub:'2023 \u00b7 Temporary installation, designer and exhibition organizer. Piazzetta San Biagio, Naples.',d:'',imgs:[]},
+          {code:'[50-EXH]',t:'Architectural Ethnography as a Performative Practice',sub:'2023 \u00b7 Group exhibition, exhibition designer. Federico II / Politecnico Milano, Palazzo Gravina.',d:'',layout:['h','h','h'],imgs:["img/50EXH/50EXH1.jpg","img/50EXH/50EXH2.jpg","img/50EXH/50EXH3.jpg"]},
+          {code:'[38-EXH]',t:'Drawing for Placemaking \u2014 KU Leuven',sub:'2022 \u00b7 Group exhibition, exhibition designer. Federico II / KU Leuven, Palazzo Gravina.',d:'',imgs:[]},
+          {code:'[35-EXH]',t:'G124: rammendare per riattivare le periferie con Renzo Piano',sub:'2022 \u00b7 Group exhibition, exhibition designer. Federico II / Fondazione San Gennaro, Palazzo Gravina.',d:'',layout:['h'],imgs:["img/35EXH/35EXH1.jpg"]},
+          {code:'[29-EXH]',t:'Muro Immaginifico',sub:'2021 \u00b7 Group exhibition, co-curator and exhibition designer. Chiostro dei Tolentini, Venice.',d:'',layout:['v','h','h','v','h','v','h','h','v','h','v','h','h','v','h','v','h','h','v','h'],imgs:["img/29EXH/29EXH1.jpg","img/29EXH/29EXH2.jpg","img/29EXH/29EXH3.jpg","img/29EXH/29EXH4.jpg","img/29EXH/29EXH5.jpg","img/29EXH/29EXH6.jpg","img/29EXH/29EXH7.jpg","img/29EXH/29EXH8.jpg","img/29EXH/29EXH9.jpg","img/29EXH/29EXH10.jpg","img/29EXH/29EXH11.jpg","img/29EXH/29EXH12.jpg","img/29EXH/29EXH13.jpg","img/29EXH/29EXH14.jpg","img/29EXH/29EXH15.jpg","img/29EXH/29EXH16.jpg","img/29EXH/29EXH17.jpg","img/29EXH/29EXH18.jpg","img/29EXH/29EXH19.jpg","img/29EXH/29EXH20.jpg"]}
+        ]},
+        {k:'cfp',l:'[CFP] Calls for Papers & [EB] Editorial',items:[
+          {code:'[65-CFP]',t:'BLOB#01: DATI',sub:'2025 \u00b7 Call for papers, editorial board member.',d:'',imgs:[]},
+          {code:'[61-CFP]',t:'BLOB#00',sub:'2024\u20132025 \u00b7 Call for papers, editorial board member.',d:'',imgs:[]},
+          {code:'[59-CFP]',t:'Arbosfera: ripensare lo spazio urbano attraverso la foresta',sub:'2024 \u00b7 Call for papers, co-curator and scientific secretary.',d:'',layout:['h'],imgs:["img/59CFP/59CFP1.jpg"]},
+          {code:'[54-CFP]',t:'Design for Ammot',sub:'2024 \u00b7 Student design competition, organizing secretary.',d:'Organized in partnership with the University of Naples Federico II, this competition focused on the design and prototyping of bespoke furniture for high-end hospitality. The brief required a balance between iconic aesthetics and industrial ergonomics. The winning proposals were selected through an anonymous jury process and subsequently showcased at Palazzo Gravina. This experience serves as a case study in “learning by doing,” bridging the gap between architectural theory and the technical realities of the manufacturing process.',layout:['h'],imgs:["img/54CFP/54CFP1.jpg"]},
+          {code:'[46-CFP]',t:'Traccia 02: BEEP!!!',sub:'2023 \u00b7 Call for podcasts, editorial board member.',d:'',layout:['h'],imgs:["img/46CFP/46CFP1.jpg"]},
+          {code:'[26-CFP]',t:'Traccia 01: DI-A-DA-IN-CON-SU-PER-TRA-FRA',sub:'2021 \u00b7 Call for podcasts, editorial board member.',d:'',layout:['h','v','h'],imgs:["img/26CFP/26CFP1.jpg","img/26CFP/26CFP2.mp4","img/26CFP/26CFP3.jpg"]}
+        ]}
+      ]},
+      {k:'memb',l:'Membership & Professional Affiliations',subs:[
+        {k:'rg',l:'[RG] Research Groups \u2014 [CA] Cultural Associations',items:[
+          {code:'[RG]',t:'Human&Future \u2014 University Task Force',sub:'2024\u2013present \u00b7 Research group member. Federico II. Coordinator: Prof. Gianluca Giannini.',d:'',imgs:[]},
+          {code:'[CA]',t:'LAPS \u2014 Laboratorio di Architettura Permanente alla Sanit\u00e0',sub:'2020\u2013present \u00b7 Vice-President.',d:'',imgs:[]}
+        ]}
+      ]}
+    ]
+  },
+  mo:{
+    bio:"Materia Ordinaria Architetti is a Naples-based practice founded by Ciro Priore and Martina Russo in 2018. The name \u2014 ordinary matter \u2014 is a declaration: the raw material of the project is what is already there.",
+    sections:[
+      {k:'int',l:'Interior',subs:[
+        {k:'int-all',l:'Interior',items:[
+          {code:'P033',t:'Villa Sara',sub:'Interior design.',d:'A renovation project for a large family home typical of 1980s construction in the Campania hinterland. The intervention introduces order into a fragmented plan: the basement level is opened up through a sunken courtyard that reconnects the living area to the garden, while the ground floor is reorganised around the main stair, with a generous living room and kitchen clearly separated from the landlord’s apartment. The upper floor maintains a more conventional arrangement of rooms along a corridor.<br><br><strong>Location</strong><br>Giugliano in Campania, Naples<br><strong>Client</strong><br>Private<br><strong>Team</strong><br>Renata Guadalupi, Ciro Priore, Martina Russo',layout:['h','h','h','h','h','h'],imgs:["img/P033/P0331.jpg","img/P033/P0332.jpg","img/P033/P0333.jpg","img/P033/P0334.jpg","img/P033/P0335.jpg","img/P033/P0336.jpg"]},
+          {code:'P034',t:'B&B 4\u2019s Home',sub:'Interior design.',d:'',imgs:[]},
+          {code:'P041',t:'Casa Scarlatta',sub:'Residential design, Naples.',d:'',layout:['h','h','h','h','h','h'],imgs:["img/P041/P0411.jpg","img/P041/P0412.jpg","img/P041/P0413.jpg","img/P041/P0414.jpg","img/P041/P0415.jpg","img/P041/P0416.jpg"]},
+          {code:'P046',t:'Casa di',sub:'Interior design.',d:'',layout:['v','v','h','v','h','v','v','h','v','h','v','v','h','v','h','v','v'],imgs:["img/P046/P0461.jpg","img/P046/P0462.jpg","img/P046/P0463.jpg","img/P046/P0464.jpg","img/P046/P0465.jpg","img/P046/P0466.jpg","img/P046/P0467.jpg","img/P046/P0468.jpg","img/P046/P0469.jpg","img/P046/P04610.jpg","img/P046/P04611.jpg","img/P046/P04612.jpg","img/P046/P04613.jpg","img/P046/P04614.jpg","img/P046/P04615.jpg","img/P046/P04616.jpg","img/P046/P04617.jpg"]},
+          {code:'P047',t:'Farmacia',sub:'Interior design, Naples.',d:'Conversion of the former pharmacy of the cloister of Santa Maria della Sanità into a ticketing space for guided visits to the Catacombs of San Gaudioso. The intervention preserves the frescoed vaults and cupolas as the dominant visual element, while the lower portion of the room — at human scale — is lined with wooden panelling. The contrast between historic surfaces above and new timber below organises the space without competing with it.<br><br>A raised wooden platform connects two ticket desks, managing visitor flow while defining the operational heart of the room. The project also accommodates a bookshop and waiting areas.<br><br><strong>Location</strong><br>Chiesa di Santa Maria alla Sanità, Naples<br><strong>Client</strong><br>Fondazione San Gennaro<br><strong>Team</strong><br>Nicola Flora, Francesca Iarrusso, Ciro Priore, Domenico Rapuano, Martina Russo',layout:['v','h','v','v','v','v','h','v','h'],imgs:["img/P047/P0471.jpg","img/P047/P0472.jpg","img/P047/P0473.jpg","img/P047/P0474.jpg","img/P047/P0475.jpg","img/P047/P0476.jpg","img/P047/P0477.jpg","img/P047/P0478.jpg","img/P047/P0479.gif"]},
+          {code:'P050',t:'Casa Cava',sub:'Residential design, Naples.',d:'Location: Cava de\u2019 Tirreni, Italy<br>Type: Interior Design<br>Design Team: Tommaso Vecci, Ciro Priore<br>Woodworking: Falegnameria Ronca<br>Completion: 2024<br>Photography: Dario Borruto',layout:['v','h','v','h','v','v','h','v','h','v','v','h','v','h','v'],imgs:["img/P050/P0501.jpg","img/P050/P0502.jpg","img/P050/P0503.jpg","img/P050/P0504.jpg","img/P050/P0505.jpg","img/P050/P0506.jpg","img/P050/P0507.jpg","img/P050/P0508.jpg","img/P050/P0509.jpg","img/P050/P05010.jpg","img/P050/P05011.jpg","img/P050/P05012.jpg","img/P050/P05013.jpg","img/P050/P05014.jpg","img/P050/P05015.jpg"]},
+          {code:'P057',t:'Piano Notte',sub:'Interior design.',d:'',layout:['h','h','h','v'],imgs:["img/P057/P0571.jpg","img/P057/P0572.jpg","img/P057/P0573.jpg","img/P057/P0574.jpg"]},
+          {code:'P058',t:'Casa G&G',sub:'Interior design.',d:'',layout:['v','h','h'],imgs:["img/P058/P0581.jpg","img/P058/P0582.jpg","img/P058/P0583.jpg"]},
+          {code:'P059',t:'Casa MP',sub:'Interior design.',d:'',imgs:[]},
+          {code:'P078',t:'Casa Fagiolino',sub:'Interior design.',d:'',imgs:[]}
+        ]}
+      ]},
+      {k:'instexh',l:'Installation & Exhibition',subs:[
+        {k:'instexh-all',l:'Installation & Exhibition',items:[
+          {code:'P006',t:'Concetta esce di casa',sub:'2016 \u00b7 Installation. Made in Cloister, Naples.',d:'For the presentation of the winning entry of the Siedimi design competition, the 72H collective built an installation drawn from the archetype of the house, reinterpreted through a light, contemporary language. The aim was to create an evocative space that recalled the domestic theme and foregrounded the winning chair — a modern reading of the traditional straw-seated chair.<br><br>The installation reproduced the silhouette of a small house with a pitched roof, constructed as a wireframe of orange PVC water pipes. The structures were wrapped in gauze and semi-transparent mesh, suggesting the idea of a dwelling without fully defining it, letting the interior space show through. This suspension between presence and absence exalted the chair, positioned at the centre of the installation as its symbolic and visual heart.<br><br>Self-built in the cloister of Santa Caterina a Formiello, Naples — a historic setting that amplified the dialogue between tradition and innovation.<br><br><strong>Location</strong><br>Made in Cloister, Naples<br><strong>Client</strong><br>Fondazione Made in Cloister<br><strong>Team</strong><br>Alessandra Coppola, Loredana De Falco, Annamaria Messina, Orazio Nicodemo, Ciro Priore, Martina Russo, Davide Savoia',layout:['h','h','v','h','v','v','h','h','v','v','v','v','v','v','h','h','h'],imgs:["img/P006/P0061.jpg","img/P006/P0062.jpg","img/P006/P0063.jpg","img/P006/P0064.jpg","img/P006/P0065.jpg","img/P006/P0066.jpg","img/P006/P0067.jpg","img/P006/P0068.jpg","img/P006/P0069.jpg","img/P006/P00610.jpg","img/P006/P00611.jpg","img/P006/P00612.jpg","img/P006/P00613.jpg","img/P006/P00614.jpg","img/P006/P00615.jpg","img/P006/P00616.jpg","img/P006/P00617.jpg"]},
+          {code:'P015',t:'PalCo Santo',sub:'2018 \u00b7 Naples.',d:'A temporary liturgical installation for the feast of San Vincenzo — known as <em>‘o Munacone</em> — in the Basilica of Santa Maria alla Sanità. The statue, normally kept behind glass, was brought down to the level of the faithful through a wooden platform that replicated the geometry of the church floor. The platform raised the congregation to the height of the saint — or lowered the saint to the height of the congregation.<br><br><strong>Location</strong><br>Basilica di Santa Maria alla Sanità, Naples<br><strong>Client</strong><br>Basilica di Santa Maria alla Sanità<br><strong>Team</strong><br>Nicola Flora, Ciro Priore, Martina Russo',layout:['v','v','h','h','v','h'],imgs:["img/P015/P0151.jpg","img/P015/P0152.jpg","img/P015/P0153.jpg","img/P015/P0154.jpg","img/P015/P0155.jpg","img/P015/P0156.jpg"]},
+          {code:'P022',t:'Villaggio Italia \u2014 N\u00f3veN\u00f3veN\u00f3ve',sub:'2019 \u00b7 Torre del Castello Melodia, Ruvo di Puglia.',d:'An installation presented at <em>Mutazioni</em>, part of the Nòve Nòve Nòve festival in Ruvo di Puglia, curated by Antilia Gallery. The exhibition addressed urban mutation and the transformations produced by climate and economic change.<br><br>Villaggio Italia takes the form of a constructed tableau: a compressed, repeatable typology of the Italian holiday village, deployed as an object of critical observation. The work functions as a still image of a familiar landscape made strange — the domestic logic of the vacation unit isolated, multiplied and placed under scrutiny.<br><br><strong>Location</strong><br>Torre del Castello Melodia, Ruvo di Puglia<br><strong>Client</strong><br>Nòve Nòve Nòve / Antilia Gallery<br><strong>Contributors</strong><br>Ensamble Studio, Formafantasma, Jirì Kamenskich, Francesca Pasquali, Erez Nevi Pana, Eva Gentner, Materia Ordinaria, Summary, Uau Project, Emusic, W.A.R., Tykk',related:'[04-RJA] Villaggio Italia',layout:["v","h","h","v","h","h","v","h","h","h","v","h","h","v","h","h","h"],imgs:["","","","","","","","","","","","","","","","",""]},
+          {code:'P030',t:'Recreation Live',sub:'2020 \u00b7 Online.',d:'A participatory virtual performance held on Zoom during the first lockdown of 2020. At a moment when productivity had become a moral imperative, the project invited participants into the most private part of the studio’s work: recreation. Anyone was welcome to join and contribute to the act of doing nothing in particular — together.<br><br><strong>Location</strong><br>zoom.us<br><strong>Client</strong><br>Antilia Gallery<br><strong>Team</strong><br>Ciro Priore, Martina Russo',layout:['h','h','h','h','h','h','h','h','h'],imgs:["img/P030/P0301.jpg","img/P030/P0302.jpg","img/P030/P0303.jpg","img/P030/P0304.mov","img/P030/P0305.jpg","img/P030/P0306.jpg","img/P030/P0307.mov","img/P030/P0308.gif","img/P030/P0309.gif"]},
+          {code:'P049',t:'Muro Immaginifico',sub:'2021 \u00b7 Venice.',d:'',layout:['v','h','h','v','h','v','h','v','v','v','v','h','v','v','v','h','h','h','v','v','v','h','h'],imgs:["img/P049/P0491.jpg","img/P049/P0492.jpg","img/P049/P0493.jpg","img/P049/P0494.jpg","img/P049/P0495.jpg","img/P049/P0496.jpg","img/P049/P0497.jpg","img/P049/P0498.jpg","img/P049/P0499.jpg","img/P049/P04910.jpg","img/P049/P04911.jpg","img/P049/P04912.jpg","img/P049/P04913.jpg","img/P049/P04914.mov","img/P049/P04915.jpg","img/P049/P04916.jpg","img/P049/P04917.jpg","img/P049/P04918.jpg","img/P049/P04919.jpg","img/P049/P04920.jpg","img/P049/P04921.jpg","img/P049/P04922.jpg","img/P049/P04923.jpg"]},
+          {code:'P050',t:'Pulcinella Velato',sub:'Installation.',d:'',imgs:[]},
+          {code:'P055',t:'Pessoa Salerno',sub:'2022 \u00b7 Installation, Pessoa Luna Park, Salerno.',d:'A temporary installation for the 2022 edition of Pessoa Luna Park, held at the Museo del Falso in Salerno. The project reorganised the museum’s white, anonymous interior through a system of wireframe devices — iron frames and wooden panels — designed to serve multiple functions: exhibition shelving, workshop spaces, mobile ticketing points and rest areas.<br><br>The modular logic of the installation evokes the arrival of a travelling circus: a space transformed temporarily and completely, then dismantled without leaving permanent traces.<br><br><strong>Location</strong><br>Salerno<br><strong>Client</strong><br>Collettivo Pessoa<br><strong>Team</strong><br>Eduardo Bassolino, Viviana Saitto, Annunziata Ambrosino, Maria Masi, Ciro Priore, Martina Russo',layout:['v','v','h','v','h','v','v'],imgs:["img/P055/P0551.jpg","img/P055/P0552.jpg","img/P055/P0553.jpg","img/P055/P0554.jpg","img/P055/P0555.jpg","img/P055/P0556.jpg","img/P055/P0557.jpg"]},
+          {code:'P060',t:'La Rocchia',sub:'2025 \u00b7 Lago Fusaro, Bacoli.',d:'Within CHANGES.',layout:['v','h','h','v','h','v','h','v','h','v','h','h'],imgs:["img/P060/P0601.jpg","img/P060/P0602.jpg","img/P060/P0603.jpg","img/P060/P0604.jpg","img/P060/P0605.jpg","img/P060/P0606.jpg","img/P060/P0607.jpg","img/P060/P0608.jpg","img/P060/P0609.jpg","img/P060/P06010.jpg","img/P060/P06011.jpg","img/P060/P06012.jpg"]},
+          {code:'P069',t:'Disconauta',sub:'2022 \u00b7 Naples.',d:'A temporary microarchitecture designed as a DJ booth for the Pessoa Luna Park. The structure combines the logic of a lifeguard tower with that of a treehouse: a triangular platform supported by three cantilevered portals that intersect at the centre, distributing loads reciprocally. The DJ accesses the top through a hatch in the platform floor, occupying an elevated position at the centre of the dance floor.<br><br>Built entirely through self-construction, starting from a reclaimed pine stump that served as both structural base and symbolic reference point. The platform is decorated with diagonal red stripes.<br><br><strong>Location</strong><br>Parco dei Quartieri Spagnoli, Naples<br><strong>Client</strong><br>Collettivo Pessoa<br><strong>Team</strong><br>Eduardo Bassolino, Viviana Saitto, Annunziata Ambrosino, Maria Masi, Ciro Priore, Martina Russo',layout:['v','h','v','h','h','v','v','v','v','h','v','h'],imgs:["img/P069/P0691.jpg","img/P069/P0692.jpg","img/P069/P0693.jpg","img/P069/P0694.jpg","img/P069/P0695.jpg","img/P069/P0696.jpg","img/P069/P0697.jpg","img/P069/P0698.jpg","img/P069/P0699.gif","img/P069/P06910.jpg","img/P069/P06911.jpg","img/P069/P06912.jpg"]},
+          {code:'P073',t:'Allestimento FRA',sub:'Installation.',d:'',layout:['v','v','v','h','v','v','h','v','v','v','h','v'],imgs:["img/P073/P0731.jpg","img/P073/P0732.jpg","img/P073/P0733.jpg","img/P073/P0734.jpg","img/P073/P0735.jpg","img/P073/P0736.jpg","img/P073/P0737.jpg","img/P073/P0738.jpg","img/P073/P0739.jpg","img/P073/P07310.jpg","img/P073/P07311.jpg","img/P073/P07312.jpg"]},
+          {code:'P076',t:'Vasame',sub:'Installation.',d:'',imgs:[]},
+          {code:'P085',t:'pIpPO \u2014 Piccole Infrastrutture per il Parco di Ponticelli',sub:'2026 \u00b7 Self-build installation, Naples.',d:'Within PRIN 2022 PNRR \u2013 RightTT.',layout:['v','h','h','h','h','h','v','h','h','h','h','h'],imgs:["img/P085/P0851.jpg","img/P085/P0852.jpg","img/P085/P0853.jpg","img/P085/P0854.jpg","img/P085/P0855.jpg","img/P085/P0856.jpg","img/P085/P0857.jpg","img/P085/P0858.jpg","img/P085/P0859.jpg","img/P085/P08510.jpg","img/P085/P08511.jpg","img/P085/P08512.jpg"]}
+        ]}
+      ]},
+      {k:'obj',l:'Object',subs:[
+        {k:'obj-all',l:'Object',items:[
+          {code:'P005',t:'/con.c\u00e8t.ta/ nome proprio di sedia',sub:'2016 \u00b7 Product design.',d:'A folding reinterpretation of the traditional Neapolitan straw-seated chair, winner of the Siedimi competition. The chair takes its name from its own directness: simple but strong, it is exactly what it shows. The original was studied, taken apart and re-engineered to fold — freeing it from its domestic immobility without abandoning the idea attached to it. Wood, straw and metal work together to produce a chair that is familiar, portable, economical and handmade. The conviction behind it: the hand is thought.<br><br><strong>Client</strong><br>Fondazione Made in Cloister / Siedimi Competition<br><strong>Team</strong><br>Alessandra Coppola, Loredana De Falco, Annamaria Messina, Orazio Nicodemo, Ciro Priore, Martina Russo, Davide Savoia',layout:['v','h','v','v','h','v','v','v','v','v','v','h'],imgs:["img/P005/P0051.jpg","img/P005/P0052.jpg","img/P005/P0053.jpg","img/P005/P0054.jpg","img/P005/P0055.jpg","img/P005/P0056.jpg","img/P005/P0057.jpg","img/P005/P0058.jpg","img/P005/P0059.jpg","img/P005/P00510.jpg","img/P005/P00511.jpg","img/P005/P00512.jpg"]},
+          {code:'P021',t:'Moriana Park',sub:'2018 \u00b7 Sculpture, Antilia Gallery, Naples.',d:'Developed for <em>Mirabilia — Interpretazioni delle Città Invisibili</em>, organised by Antilia Gallery, the work takes Calvino’s city of Moriana — the two-faced city — and translates it into a luminous architectural model in the style of a fairground attraction. By night, Moriana Park is illuminated, colourful and brilliant, possessing an intrinsic pop beauty. By day, with the lights off, all the distortions, imperfections and ugliness of its electrical scaffolding become visible — cables, batteries, bolts left deliberately exposed.<br><br><strong>Location</strong><br>Bitonto, Matera, Parete<br><strong>Client</strong><br>Antilia Gallery<br><strong>Team</strong><br>Ciro Priore, Martina Russo',related:'Il giardino delle sculture volanti | Moriana Park \u2014 Mirabilia Bitonto | Moriana Park \u2014 Mirabilia, Casa Cava',layout:['h','h','h','v','h','h','v','h','h','v'],imgs:["img/P021/P0211.jpg","img/P021/P0212.jpg","img/P021/P0213.jpg","img/P021/P0214.jpg","img/P021/P0215.jpg","img/P021/P0216.jpg","img/P021/P0217.jpg","img/P021/P0218.jpg","img/P021/P0219.jpg","img/P021/P02110.jpg"]},
+          {code:'P027',t:'Playing with Toy Cars',sub:'Object & Sculpture, Materia Ordinaria.',d:'',layout:['h','v','h','v','v','v','v','v','v','v','v','v'],imgs:["img/P027/P0271.jpg","img/P027/P0272.jpg","img/P027/P0273.jpg","img/P027/P0274.jpg","img/P027/P0275.jpg","img/P027/P0276.jpg","img/P027/P0277.jpg","img/P027/P0278.jpg","img/P027/P0279.jpg","img/P027/P02710.jpg","img/P027/P02711.jpg","img/P027/P02712.jpg"]},
+          {code:'P028',t:'Passatempo ordinario per momenti straordinari',sub:'2020.',d:'',layout:["v","h","h","h","h","v"],imgs:["","","","","",""]},
+          {code:'P038',t:'Sesso Matto',sub:'2020 \u00b7 Poster design, Materia Ordinaria.',d:'',layout:['v','h','h','h','v','h','v','h','v','v'],imgs:["img/P038/P0381.jpg","img/P038/P0382.jpg","img/P038/P0383.jpg","img/P038/P0384.jpg","img/P038/P0385.jpg","img/P038/P0386.jpg","img/P038/P0387.jpg","img/P038/P0388.jpg","img/P038/P0389.jpg","img/P038/P03810.jpg"]},
+          {code:'P043',t:'Aymonino',sub:'Object, Materia Ordinaria.',d:'',layout:['h','v','h','h','v','h','h','h','h','h','v','v','h','h','v'],imgs:["img/P043/P0431.jpg","img/P043/P0432.jpg","img/P043/P0433.jpg","img/P043/P0434.jpg","img/P043/P0435.jpg","img/P043/P0436.jpg","img/P043/P0437.mp4","img/P043/P0438.jpg","img/P043/P0439.jpg","img/P043/P04310.jpg","img/P043/P04311.jpg","img/P043/P04312.jpg","img/P043/P04313.jpg","img/P043/P04314.jpg","img/P043/P04315.jpg"]},
+          {code:'P045',t:'Mobile Urne Cinerarie',sub:'2021 \u00b7 Furniture design, Naples.',d:'Client: Fondazione San Gennaro.',layout:['v','h','v','v','h','h'],imgs:["img/P045/P0451.jpg","img/P045/P0452.jpg","img/P045/P0453.jpg","img/P045/P0454.jpg","img/P045/P0455.jpg","img/P045/P0456.jpg"]},
+          {code:'P051',t:'Sibilla Chillida',sub:'Object, Materia Ordinaria.',d:'',layout:['h','h','v','h','v','v'],imgs:["img/P051/P0511.jpg","img/P051/P0512.jpg","img/P051/P0513.jpg","img/P051/P0514.jpg","img/P051/P0515.jpg","img/P051/P0516.jpg"]},
+          {code:'P071',t:'Cassettiera',sub:'2022 \u00b7 Design Forniture, Naples.',d:'Type: Design Forniture<br>Design Team: Materia Ordinaria, NAG Atelier<br>Completion: 2022<br>Photography: Gabriele Di Virgilio',layout:['v','v','v','v','h','h','v','h'],imgs:["img/P071/P0711.jpg","img/P071/P0712.jpg","img/P071/P0713.jpg","img/P071/P0714.jpg","img/P071/P0715.jpg","img/P071/P0716.jpg","img/P071/P0717.jpg","img/P071/P0718.jpg"]}
+        ]}
+      ]},
+      {k:'arch',l:'Architecture',subs:[
+        {k:'arch-all',l:'Architecture',items:[
+          {code:'P011',t:'Ozanam',sub:'Research & Design, Naples.',d:'',layout:['h','h','h','h','h','h','v','v','v'],imgs:["img/P011/P0111.jpg","img/P011/P0112.jpg","img/P011/P0113.jpg","img/P011/P0114.jpg","img/P011/P0115.jpg","img/P011/P0116.jpg","img/P011/P0117.jpg","img/P011/P0118.jpg","img/P011/P0119.jpg"]},
+          {code:'P014',t:'Lux Boxe',sub:'Research & Design, Naples.',d:'A pilot project for a boxing gym in the courtyard of the cloister of San Severo al Capodimonte. A lightweight steel and glass volume — white-framed, largely transparent — sits at the centre of the courtyard as a new lamp in an existing historic space. The ground floor can open entirely onto the court, allowing competitions and public events to spill outward. The upper level is a semi-transparent training space, concluded by a shaded rooftop terrace usable across most of the year.<br><br><strong>Location</strong><br>Naples<br><strong>Client</strong><br>Fondazione San Gennaro<br><strong>Team</strong><br>DiARC, EAT UCLM, 72:H',layout:['v','h','h','h','h','v','h','h','h','v','h','h','h','v','h','v','h','h'],imgs:["img/P014/P0141.jpg","img/P014/P0142.jpg","img/P014/P0143.jpg","img/P014/P0144.jpg","img/P014/P0145.jpg","img/P014/P0146.jpg","img/P014/P0147.jpg","img/P014/P0148.jpg","img/P014/P0149.jpg","img/P014/P01410.jpg","img/P014/P01411.jpg","img/P014/P01412.jpg","img/P014/P01413.jpg","img/P014/P01414.jpg","img/P014/P01415.jpg","img/P014/P01416.jpg","img/P014/P01417.jpg","img/P014/P01418.jpg"]},
+          {code:'P029',t:'Piazza Santini Capaccio Scalo',sub:'Urban project.',d:'A competition entry for the redesign of Piazza Santini in Capaccio Scalo. The project restores a central civic role to a square that has been progressively surrendered to traffic. The proposal simplifies the existing layout, removes through-traffic, and reorganises the edges of the square by redesigning the programme of existing buildings and introducing new collective uses.<br><br><strong>Location</strong><br>Capaccio Scalo, Salerno<br><strong>Client</strong><br>Comune di Capaccio Scalo<br><strong>Team</strong><br>T. Dalle, S. Pompili, C. Priore, M. Russo, D. Savoia, M. Selvaggi',layout:['h','v','h','h','h','h','h','h','h','v','v','h','h','v','v','v','h','h','h','h','h','h','h','v','v'],imgs:["img/P029/P0291.jpg","img/P029/P0292.jpg","img/P029/P0293.jpg","img/P029/P0294.jpg","img/P029/P0295.jpg","img/P029/P0296.jpg","img/P029/P0297.jpg","img/P029/P0298.jpg","img/P029/P0299.jpg","img/P029/P02910.jpg","img/P029/P02911.jpg","img/P029/P02912.jpg","img/P029/P02913.jpg","img/P029/P02914.jpg","img/P029/P02915.jpg","img/P029/P02916.jpg","img/P029/P02917.jpg","img/P029/P02918.jpg","img/P029/P02919.jpg","img/P029/P02920.jpg","img/P029/P02921.jpg","img/P029/P02922.jpg","img/P029/P02923.jpg","img/P029/P02924.jpg","img/P029/P02925.jpg"]}
+        ]}
+      ]},
+      {k:'gfx',l:'Graphic',subs:[
+        {k:'gfx-all',l:'Graphic',items:[
+          {code:'P010',t:'Conegliano',sub:'Graphic design.',d:'A brand identity proposal for the Consorzio Conegliano Valdobbiadene. The hills of Conegliano and Valdobbiadene are a hand-drawn history book: the terraces, the rows of vines, the arches of village architecture, the ridgelines of campanili. The letterforms of the proposal attempt to redraw these forms — the terraced hillsides, the vine rows, the water — through a process of careful abstraction that keeps the landscape legible in the type.<br><br><strong>Client</strong><br>Consorzio Conegliano Valdobbiadene<br><strong>Team</strong><br>Ciro Priore',layout:['h','h','h','h','h','h','h','h','h','h'],imgs:["img/P010/P0101.jpg","img/P010/P0102.jpg","img/P010/P0103.jpg","img/P010/P0104.jpg","img/P010/P0105.jpg","img/P010/P0106.jpg","img/P010/P0107.jpg","img/P010/P0108.jpg","img/P010/P0109.jpg","img/P010/P01010.gif"]},
+          {code:'P036',t:'\u2019A Rezza',sub:'Graphic design.',d:'',layout:['h','h','v','v','h'],imgs:["img/P036/P0361.gif","img/P036/P0362.gif","img/P036/P0363.jpg","img/P036/P0364.jpg","img/P036/P0365.jpg"]}
+        ]}
+      ]},
+      {k:'res',l:'Research',subs:[
+        {k:'res-all',l:'Research',items:[
+          {code:'P008',t:'Mahal Ascent Vehicle',sub:'Research.',d:'A competition entry for a one-way journey to Mars. Taking the geometric logic of the Taj Mahal — whose forms translate almost exactly into a pressurised capsule — the project proposes MAV: an identity shuttle, a portable monument, the symbol of a lost human civilisation. Inhabiting the uninhabitable forces a confrontation with the deepest questions about dwelling. Leaving Earth, the new Martian also leaves behind every built testimony.<br><br><strong>Client</strong><br>24H Competition<br><strong>Team</strong><br>C. Priore, M. Russo, D. Savoia',layout:['h'],imgs:["img/P008/P0081.jpg"]},
+          {code:'P013',t:'Domitio Studios',sub:'2018\u20132025 \u00b7 Residential & Coastline, Naples.',d:'Selected for the Italian Pavilion at the Venice Architecture Biennale 2025.',related:'Biennale di Venezia 2025',layout:["v","h","h","h","v","h","h","v","h","h","v","h","h","v","h","h"],imgs:["","","","","","","","","","","","","","","",""]},
+        ]}
+      ]}
+    ]
+  }
+}
+;
+
+var CW='ciro', active=null, activeItem=null, lbImgs=[], lbIdx=0;
+var allItems=[]; // flat list of all items for right col
+
+// ── SECTION INDICATOR DOT ──
+function initScrollDot(){
+  var dot = document.getElementById('scroll-dot-left');
+  if(!dot) return;
+  var BAR = 34, PAD = 8;
+
+  function updateDot(){
+    var right = document.getElementById('right');
+    var left = document.getElementById('left');
+    var groups = right.querySelectorAll('.proj-group[data-sec]');
+    if(!groups.length){ dot.style.display='none'; return; }
+
+    var threshold = right.scrollTop + right.clientHeight * 0.3;
+    var activeSec = null;
+    groups.forEach(function(g){
+      if(g.offsetTop <= threshold) activeSec = g.dataset.sec;
+    });
+    if(!activeSec) activeSec = groups[0].dataset.sec;
+
+    var target = left.querySelector('.l0[data-k="' + activeSec + '"]');
+    if(!target){ dot.style.display='none'; return; }
+
+    // target position relative to viewport
+    var rect = target.getBoundingClientRect();
+    var dotTop = rect.top + rect.height / 2 - 3;
+    dotTop = Math.max(BAR + PAD, Math.min(window.innerHeight - BAR - PAD - 6, dotTop));
+    dot.style.top = dotTop + 'px';
+    dot.style.display = 'block';
+  }
+
+  document.getElementById('right').addEventListener('scroll', updateDot);
+  document.getElementById('left').addEventListener('scroll', function(){ setTimeout(updateDot, 50); });
+  document.addEventListener('click', function(){ setTimeout(updateDot, 150); });
+  setTimeout(updateDot, 300);
+}
+
+var lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n\nSed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.';
+
+function setBnActive(mode){
+  ['bn-cp','bn-cpidx','bn-mo','bn-moidx'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.style.fontWeight = '400';
+  });
+  ['tb-cp','tb-mo'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.style.fontWeight = '400';
+  });
+  var bnMap = {cp:'bn-cp',cpidx:'bn-cpidx',mo:'bn-mo',moidx:'bn-moidx'};
+  var tbMap = {cp:'tb-cp',mo:'tb-mo',moidx:'tb-mo',cpidx:'tb-cp'};
+  if(bnMap[mode]){ var el=document.getElementById(bnMap[mode]); if(el) el.style.fontWeight='700'; }
+  if(tbMap[mode]){ var el=document.getElementById(tbMap[mode]); if(el) el.style.fontWeight='700'; }
+}
+
+function showCP(){
+  document.getElementById('cp-page').style.display='block';
+  document.getElementById('mo-page').style.display='none';
+  document.getElementById('wrap').style.display='none';
+  document.getElementById('cp-bio-text').textContent = D.ciro.bio;
+  document.getElementById('cp-statement-text').textContent = lorem;
+  document.body.classList.remove('mo-mode');
+  setBnActive('cp');
+}
+
+function showMO(){
+  document.getElementById('mo-page').style.display='block';
+  document.getElementById('cp-page').style.display='none';
+  document.getElementById('wrap').style.display='none';
+  document.getElementById('mo-bio-text').textContent = D.mo.bio;
+  document.getElementById('mo-statement-text').textContent = lorem;
+  document.body.classList.add('mo-mode');
+  setBnActive('mo');
+}
+
+function showBio(){ showCP(); }
+
+function showIdx(w){
+  CW=w;
+  document.getElementById('cp-page').style.display='none';
+  document.getElementById('mo-page').style.display='none';
+  document.getElementById('wrap').style.display='grid';
+  document.getElementById('bio-page').style.display='none';
+  document.getElementById('idx').style.display='block';
+  if(w==='mo'){
+    document.body.classList.add('mo-mode');
+    setBnActive('moidx');
+  } else {
+    document.body.classList.remove('mo-mode');
+    setBnActive('cpidx');
+  }
+  buildIdx(w);
+  buildGrid(w);
+}
+
+function setBn(v){
+  document.getElementById('bn-idx').classList.toggle('on',v==='idx');
+  document.getElementById('bn-bio').classList.toggle('on',v==='bio');
+}
+
+// ── BUILD INDEX ──
+function buildIdx(w){
+  var el=document.getElementById('idx');
+  el.innerHTML='';
+  allItems=[];
+  D[w].sections.forEach(function(sec){
+    var b0=mkBtn('l0',sec.l);
+    b0.dataset.k = sec.k;
+    var d0=mkDiv('l0b');
+    b0.onclick=function(){
+      var isOpen=b0.classList.contains('on');
+      // close all L0
+      document.querySelectorAll('.l0').forEach(function(x){x.classList.remove('on');});
+      document.querySelectorAll('.l0b').forEach(function(x){x.classList.remove('on');});
+      // open this one only if it was closed
+      if(!isOpen){
+        b0.classList.add('on');
+        d0.classList.add('on');
+        // scroll right column to first group of this section
+        var right = document.getElementById('right');
+        var firstGroup = right.querySelector('.proj-group[data-sec="'+sec.k+'"]');
+        if(firstGroup){
+          right.scrollTo({top: firstGroup.offsetTop - 8, behavior:'smooth'});
+        }
+      }
+      // remove active state
+      if(active){active.classList.remove('on');active=null;activeItem=null;}
+      document.getElementById('idx').classList.remove('has-active');
+    };
+    el.appendChild(b0); el.appendChild(d0);
+    sec.subs.forEach(function(sub){
+      var b1=mkBtn('l1',sub.l);
+      var d1=mkDiv('l1b');
+      b1.onclick=function(){
+        var isOpen=b1.classList.contains('on');
+        // close all L1 siblings in this L0
+        d0.querySelectorAll('.l1').forEach(function(x){x.classList.remove('on');});
+        d0.querySelectorAll('.l1b').forEach(function(x){x.classList.remove('on');});
+        if(!isOpen){b1.classList.add('on');d1.classList.add('on');}
+        // remove active state
+        if(active){active.classList.remove('on');active=null;activeItem=null;}
+        document.getElementById('idx').classList.remove('has-active');
+      };
+      d0.appendChild(b1); d0.appendChild(d1);
+      sub.items.forEach(function(item){
+        allItems.push(item);
+        var row=document.createElement('div');
+        row.className='item';
+        row.dataset.id=allItems.length-1; row.id='idx-'+mkSlug(item.t); row.id='row-'+mkSlug(item.t);
+        row.innerHTML=
+          '<div class="item-line"><span class="item-code">'+(item.code||'')+'</span><span class="item-title">'+item.t+'</span></div>'+
+          '<div class="item-sub">'+item.sub+'</div>'+
+          (item.d && item.d.length>0 ? '<div class="item-desc">'+(item.d.length>180?item.d.substring(0,180)+'…':item.d)+'</div>' : '')+
+          (item.d && item.d.length>0 ? '<span class="item-more">more →</span>' : '')+
+          (item.link?'<a class="item-link" href="'+item.link+'" target="_blank" rel="noopener">read →</a>':'')+
+          (item.related?(function(rel){return rel.split('|').map(function(r){return '<span class="item-related" data-rel="'+r.trim()+'">'+r.trim()+'</span>';}).join('');  })(item.related):'');
+        // wire modal button
+        (function(row,t,d,rel){
+          var btn=row.querySelector('.item-more');
+          if(btn) btn.onclick=function(e){ e.stopPropagation(); modalOpen(t,d); };
+          // wire all related buttons
+          row.querySelectorAll('.item-related').forEach(function(btn){
+            btn.onclick=function(e){
+              e.stopPropagation();
+              var rel=btn.dataset.rel||'';
+              var relClean=rel.replace(/^\[[^\]]+\]\s*/,'');
+              var worlds=['ciro','mo'];
+              for(var wi=0;wi<worlds.length;wi++){
+                var w=worlds[wi];
+                var secs=D[w].sections;
+                for(var si=0;si<secs.length;si++){
+                  var subs=secs[si].subs;
+                  for(var li=0;li<subs.length;li++){
+                    var items=subs[li].items;
+                    for(var ii=0;ii<items.length;ii++){
+                      var it=items[ii];
+                      if(it.t===relClean||it.t===rel||(it.code&&(it.code+' '+it.t===rel||it.code+' '+it.t===relClean))){
+                        if(w!==CW) showIdx(w);
+                        setTimeout(function(item){ openFromGrid(item); },100,it);
+                        return;
+                      }
+                    }
+                  }
+                }
+              }
+            };
+          });
+        })(row, item.t, item.d||'', item.related||'');
+        row.onclick=function(e){
+          if(e.target.tagName==='A') return;
+          activateItem(row,item);
+        };
+        d1.appendChild(row);
+      });
+    });
+  });
+}
+
+function revealItem(item){
+
+  // hide all real images
+  document.querySelectorAll('.cell img').forEach(function(img){
+    img.style.display='none';
+    img.parentElement.classList.remove('revealed');
+    img.parentElement.style.border=document.body.classList.contains('mo-mode')?'1px solid #fff':'1px solid #000';
+  });
+  // reveal cells belonging to this item
+  document.querySelectorAll('.cell[data-item]').forEach(function(c){
+    if(c.dataset.item===item.t){
+      var img=c.querySelector('img');
+      if(img){
+        img.style.display='block';
+        c.classList.add('revealed');
+        c.style.border='none';
+        // re-attach click to open lightbox after reveal
+        (function(cell,it,allImgs){
+          var imgEls=Array.prototype.slice.call(it.imgs||[]);
+          var s=imgEls.indexOf(cell.querySelector('img').src.split(',')[0]);
+          // find index by position
+          var cells=document.querySelectorAll('.cell.revealed[data-item="'+it.t+'"]');
+          cell.onclick=function(){
+            var idx2=Array.prototype.indexOf.call(cells,cell);
+            lbOpen(it.imgs,Math.max(0,idx2));
+          };
+        })(c,item,item.imgs);
+      }
+    }
+  });
+}
+
+function getOffsetTop(el, container){
+  var top = 0;
+  while(el && el !== container){
+    top += el.offsetTop;
+    el = el.offsetParent;
+  }
+  return top;
+}
+
+function activateItem(row,item,skipScroll){
+  if(active===row){ row.classList.remove('on'); active=null; activeItem=null; document.getElementById('idx').classList.remove('has-active'); return; }
+  if(active) active.classList.remove('on');
+  // close all other items
+  document.querySelectorAll('.item.on').forEach(function(x){x.classList.remove('on');});
+  row.classList.add('on'); active=row; activeItem=item;
+  document.getElementById('idx').classList.add('has-active');
+  revealItem(item);
+  // collapse all sections, reopen only path to this row
+  document.querySelectorAll('.l0,.l1').forEach(function(x){x.classList.remove('on');});
+  document.querySelectorAll('.l0b,.l1b').forEach(function(x){x.classList.remove('on');});
+  var l1b=row.parentElement;
+  if(l1b && l1b.classList.contains('l1b')){
+    l1b.classList.add('on');
+    var l1el=l1b.previousElementSibling; if(l1el) l1el.classList.add('on');
+    var l0b=l1b.parentElement;
+    if(l0b && l0b.classList.contains('l0b')){
+      l0b.classList.add('on');
+      var l0el=l0b.previousElementSibling; if(l0el) l0el.classList.add('on');
+    }
+  }
+  var leftCol=document.getElementById('left');
+  var rightCol=document.getElementById('right');
+  var grp=document.getElementById('lbl-'+mkSlug(item.t));
+  // scroll left after reflow
+  (function(r){
+    setTimeout(function(){
+      var rowTop = getOffsetTop(r, leftCol);
+      leftCol.scrollTo({top:Math.max(0, rowTop-100), behavior:'smooth'});
+    }, 50);
+  })(row);
+  // scroll right: calculate offset relative to #right
+  if(!skipScroll && grp){
+    var grpTop = getOffsetTop(grp, rightCol);
+    rightCol.scrollTo({top:grpTop, behavior:'smooth'});
+  }
+}
+
+// ── BUILD GRID ──
+// Right col: all items, each gets 9 cells (imgs or diagonal)
+function buildGrid(w){
+  var grid=document.getElementById('img-grid');
+  grid.innerHTML='';
+  D[w].sections.forEach(function(sec){
+    sec.subs.forEach(function(sub){
+
+      // GL subsections: render all items in one continuous grid
+      if(sub.k === 'gl'){
+        var group=document.createElement('div');
+        group.className='proj-group';
+        group.id='lbl-gl-'+mkSlug(sub.l);
+        group.dataset.sec = sec.k;
+        var lbl=document.createElement('div');
+        lbl.className='proj-label';
+        lbl.textContent=sub.l;
+        group.appendChild(lbl);
+        var subgrid=document.createElement('div');
+        subgrid.className='proj-group-grid';
+        group.appendChild(subgrid);
+        grid.appendChild(group);
+
+        // render each item as a single cell (or empty if no img)
+        var slotCount = 0;
+        sub.items.forEach(function(item){
+          var el=document.createElement('div');
+          el.dataset.item=item.t;
+          el.id='lbl-'+mkSlug(item.t);
+          var hasImg = item.imgs && item.imgs.length > 0 && item.imgs[0] && item.imgs[0].length > 5;
+          if(!hasImg){
+            // empty cell with diagonal
+            el.className='cell cell-empty h1';
+            el.onclick=function(){ openFromGrid(item); };
+          } else {
+            el.className='cell h1';
+            var lbl2=document.createElement('span');
+            lbl2.className='cell-placeholder-label';
+            var codeStr=item.code?item.code:(item.t?item.t.substring(0,12):'');
+            lbl2.textContent=codeStr;
+            el.appendChild(lbl2);
+            if(!item.draft){
+              var ext=item.imgs[0].split('.').pop().toLowerCase();
+              if(ext==='mp4'||ext==='webm'){
+                var vid=document.createElement('video');
+                vid.src=item.imgs[0]; vid.autoplay=true; vid.loop=true; vid.muted=true; vid.playsInline=true;
+                vid.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;z-index:2';
+                el.appendChild(vid);
+              } else {
+                var img2=document.createElement('img');
+                img2.src=item.imgs[0]; img2.alt=''; img2.loading='lazy';
+                el.appendChild(img2);
+              }
+            }
+            (function(c,it){
+              c.onmouseenter=function(){
+                if(activeItem&&activeItem.t===it.t) return;
+                if(it.draft){ c.style.background='#000'; var l=c.querySelector('.cell-placeholder-label'); if(l) l.style.color='#fff'; }
+                else { var m=c.querySelector('img,video'); if(m&&m.src&&m.src.length>5&&!c.classList.contains('revealed')){m.style.display='block';c.style.border='none';} }
+              };
+              c.onmouseleave=function(){
+                if(activeItem&&activeItem.t===it.t) return;
+                if(it.draft){ c.style.background='#fff'; var l=c.querySelector('.cell-placeholder-label'); if(l) l.style.color='#000'; }
+                else { var m=c.querySelector('img,video'); if(m){m.style.display='none';c.style.border=document.body.classList.contains('mo-mode')?'1px solid #fff':'1px solid #000';} }
+              };
+              c.onclick=function(){ openFromGrid(it); };
+            })(el,item);
+          }
+          subgrid.appendChild(el);
+          slotCount++;
+        });
+        // fill remainder of last row
+        var rem=slotCount%4;
+        if(rem!==0){ for(var f=0;f<4-rem;f++){ var ep=document.createElement('div'); ep.className='cell cell-empty h1'; subgrid.appendChild(ep); } }
+        return;
+      }
+
+      sub.items.forEach(function(item){
+        // wrapper group
+        var group=document.createElement('div');
+        group.className='proj-group';
+        group.id='lbl-'+mkSlug(item.t);
+        group.dataset.sec = sec.k;
+
+        // label
+        var lbl=document.createElement('div');
+        lbl.className='proj-label';
+        lbl.textContent=(item.code?item.code+' ':'')+item.t;
+        lbl.dataset.title=item.t;
+        group.appendChild(lbl);
+
+        // description above images
+        
+        // sub-grid for this project's images
+        var subgrid=document.createElement('div');
+        subgrid.className='proj-group-grid';
+        group.appendChild(subgrid);
+        grid.appendChild(group);
+
+        buildItemCells(subgrid, item);
+      });
+    });
+  });
+}
+
+function openFromGrid(item){
+  var rightCol=document.getElementById('right');
+  var leftCol=document.getElementById('left');
+
+  // find the row for this item
+  var rows=document.querySelectorAll('.item');
+  var targetRow=null;
+  for(var i=0;i<rows.length;i++){
+    var idx=parseInt(rows[i].dataset.id);
+    if(allItems[idx] && allItems[idx].t===item.t){
+      targetRow=rows[i]; break;
+    }
+  }
+  if(!targetRow) return;
+
+  // close all items and sections
+  document.querySelectorAll('.item.on').forEach(function(x){x.classList.remove('on');});
+  document.querySelectorAll('.l0,.l1').forEach(function(x){x.classList.remove('on');});
+  document.querySelectorAll('.l0b,.l1b').forEach(function(x){x.classList.remove('on');});
+
+  // open path to this row FIRST
+  var l1b=targetRow.parentElement;
+  if(l1b && l1b.classList.contains('l1b')){
+    l1b.classList.add('on');
+    var l1el=l1b.previousElementSibling; if(l1el) l1el.classList.add('on');
+    var l0b=l1b.parentElement;
+    if(l0b && l0b.classList.contains('l0b')){
+      l0b.classList.add('on');
+      var l0el=l0b.previousElementSibling; if(l0el) l0el.classList.add('on');
+    }
+  }
+
+  // activate row (mark active, reveal images)
+  if(active) active.classList.remove('on');
+  targetRow.classList.add('on');
+  active=targetRow; activeItem=item;
+  document.getElementById('idx').classList.add('has-active');
+
+  // show ongoing notice if no images
+  var hasRealImgs = item.imgs && item.imgs.some(function(s){ return s && s.length > 5; });
+  var descEl = targetRow.querySelector('.item-desc');
+  var moreEl = targetRow.querySelector('.item-more');
+  if(!hasRealImgs && !item.draft){
+    if(descEl) descEl.textContent = 'Work in progress.';
+    if(moreEl) moreEl.style.display = 'none';
+  } else {
+    if(descEl) descEl.textContent = item.d ? item.d.substring(0,120) + (item.d.length > 120 ? '…' : '') : '';
+    if(moreEl) moreEl.style.display = item.d ? 'inline-block' : 'none';
+  }
+
+  revealItem(item);
+
+  // scroll both cols after reflow
+  var grp=document.getElementById('lbl-'+mkSlug(item.t));
+  setTimeout(function(){
+    if(grp){
+      var label = grp.querySelector('.proj-label');
+      var labelPad = label ? parseInt(window.getComputedStyle(label).paddingTop) : 34;
+      rightCol.scrollTo({top:Math.max(0, getOffsetTop(grp,rightCol) + labelPad - 8),behavior:'smooth'});
+    }
+    leftCol.scrollTo({top:Math.max(0,getOffsetTop(targetRow,leftCol)-100),behavior:'smooth'});
+  },50);
+}
+
+function highlightCells(item){
+  // no visual change on cells when clicking
+}
+
+function buildItemCells(grid, item){
+  var COLS = 4;
+  var imgs = item.imgs || [];
+  var layout = item.layout || null;
+
+  // Check if item has no real images
+  var hasRealImgs = imgs.some(function(s){ return s && s.length > 5; });
+  var isOngoing = !hasRealImgs && !item.draft;
+
+  if(isOngoing){
+    // Show 4 empty cells with diagonal — item appears in list only
+    for(var oi=0; oi<4; oi++){
+      var oel = document.createElement('div');
+      oel.className = 'cell cell-empty h1';
+      oel.dataset.item = item.t;
+      oel.onclick = function(){ openFromGrid(item); };
+      grid.appendChild(oel);
+    }
+    return;
+  }
+
+  // Build layout array: 'v'=vertical, 'h'=horizontal, 'e'=empty
+  var cells = [];
+  if(layout){
+    // Use predefined layout
+    var imgIdx = 0;
+    layout.forEach(function(type){
+      if(type === 'e'){
+        cells.push({type:'e'});
+      } else {
+        cells.push({type:type, src: imgs[imgIdx] || null, imgIdx: imgIdx});
+        imgIdx++;
+      }
+    });
+  } else {
+    // Fallback: all horizontal
+    imgs.forEach(function(src, i){ cells.push({type:'h', src:src, imgIdx:i}); });
+    if(imgs.length === 0){
+      for(var p=0;p<COLS;p++) cells.push({type:'e'});
+    }
+  }
+
+  // Count slots
+  var slotsUsed = 0;
+  cells.forEach(function(c){ slotsUsed += c.type==='v' ? 2 : 1; });
+
+  // Fill to next multiple of COLS
+  var rem = slotsUsed % COLS;
+  var fill = rem === 0 ? 0 : COLS - rem;
+  for(var f=0; f<fill; f++) cells.push({type:'e'});
+
+  // Build DOM synchronously
+  cells.forEach(function(cellDef, ci){
+    var el = document.createElement('div');
+    el.dataset.item = item.t;
+
+    if(cellDef.type === 'e'){
+      el.className = 'cell cell-empty h1';
+      el.onclick = function(){ openFromGrid(item); };
+    } else {
+      el.className = cellDef.type === 'v' ? 'cell h2' : 'cell h1';
+
+      // always add label (code + image number), visible on white bg
+      var lbl = document.createElement('span');
+      lbl.className = 'cell-placeholder-label';
+      var codeStr = item.code ? item.code : (item.t ? item.t.substring(0,12) : '');
+      lbl.textContent = codeStr + (codeStr ? '\u2009' : '') + (cellDef.imgIdx + 1);
+      el.appendChild(lbl);
+
+      // add image or video on top if src exists — hidden by default, shown on hover (skip if draft)
+      if(!item.draft && cellDef.src && cellDef.src.length > 5){
+        var ext = cellDef.src.split('.').pop().toLowerCase();
+        if(ext === 'mp4' || ext === 'webm'){
+          var vid = document.createElement('video');
+          vid.src = cellDef.src;
+          vid.autoplay = true; vid.loop = true; vid.muted = true; vid.playsInline = true;
+          vid.style.position='absolute'; vid.style.inset='0'; vid.style.width='100%'; vid.style.height='100%'; vid.style.objectFit='cover'; vid.style.display='none'; vid.style.zIndex='2';
+          el.appendChild(vid);
+        } else {
+          var img = document.createElement('img');
+          img.src = cellDef.src; img.alt = ''; img.loading = 'lazy';
+          el.appendChild(img);
+        }
+      }
+
+      (function(c, it, imgIdx, allImgs){
+        c.onmouseenter = function(){
+          if(activeItem && activeItem.t === it.t) return;
+          if(it.draft){
+            document.querySelectorAll('.cell[data-item]').forEach(function(x){
+              if(x.dataset.item === it.t && !x.classList.contains('cell-empty')){
+                x.style.background='#000';
+                var lbl=x.querySelector('.cell-placeholder-label');
+                if(lbl) lbl.style.color='#fff';
+              }
+            });
+          } else {
+            document.querySelectorAll('.cell[data-item]').forEach(function(x){
+              if(x.dataset.item === it.t){
+                var media=x.querySelector('img,video');
+                if(media && media.src && media.src.length > 5 && !x.classList.contains('revealed')){
+                media.style.display='block';
+                x.style.border='none';
+              }
+              }
+            });
+          }
+        };
+        c.onmouseleave = function(){
+          if(activeItem && activeItem.t === it.t) return;
+          if(it.draft){
+            document.querySelectorAll('.cell[data-item]').forEach(function(x){
+              if(x.dataset.item === it.t && !x.classList.contains('cell-empty')){
+                x.style.background='#fff';
+                var lbl=x.querySelector('.cell-placeholder-label');
+                if(lbl) lbl.style.color='#000';
+              }
+            });
+          } else {
+            document.querySelectorAll('.cell[data-item]').forEach(function(x){
+              if(x.dataset.item === it.t && !x.classList.contains('revealed')){
+                var media=x.querySelector('img,video');
+                if(media){media.style.display='none';x.style.border=document.body.classList.contains('mo-mode')?'1px solid #fff':'1px solid #000';}
+              }
+            });
+          }
+        };
+        c.onclick = function(){
+          if(activeItem && activeItem.t === it.t){
+            if(!it.draft && allImgs && allImgs.length > imgIdx) lbOpen(allImgs, imgIdx);
+          } else {
+            openFromGrid(it);
+          }
+        };
+      })(el, item, cellDef.imgIdx || 0, imgs);
+    }
+    grid.appendChild(el);
+  });
+}
+function emptyCell(item){
+  var ec = document.createElement('div');
+  ec.className = 'cell cell-empty h1';
+  ec.dataset.item = item.t;
+  ec.onclick = function(){ openFromGrid(item); };
+  return ec;
+}
+
+function emptyCell(item){
+  var ec = document.createElement('div');
+  ec.className = 'cell cell-empty h1';
+  ec.dataset.item = item.t;
+  (function(it){ ec.onclick=function(){ openFromGrid(it); }; })(item);
+  return ec;
+}
+
+function mkSlug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,"_").substring(0,40);}
+function mkBtn(cls,txt){ var b=document.createElement('button'); b.className=cls; b.textContent=txt; return b; }
+function mkDiv(cls){ var d=document.createElement('div'); d.className=cls; return d; }
+
+// ── LIGHTBOX ──
+function lbOpen(imgs,i){ lbImgs=imgs; lbIdx=i; document.getElementById('lb-img').src=imgs[i]; document.getElementById('lb-c').textContent=(i+1)+' / '+imgs.length; document.getElementById('lb').classList.add('on'); }
+function lbClose(){ document.getElementById('lb').classList.remove('on'); }
+function lbOvl(e){ if(e.target===document.getElementById('lb')) lbClose(); }
+function lbNav(d,e){ e.stopPropagation(); lbIdx=(lbIdx+d+lbImgs.length)%lbImgs.length; document.getElementById('lb-img').src=lbImgs[lbIdx]; document.getElementById('lb-c').textContent=(lbIdx+1)+' / '+lbImgs.length; }
+document.addEventListener('keydown',function(e){ if(!document.getElementById('lb').classList.contains('on'))return; if(e.key==='ArrowRight')lbNav(1,{stopPropagation:function(){}}); if(e.key==='ArrowLeft')lbNav(-1,{stopPropagation:function(){}}); if(e.key==='Escape')lbClose(); });
+
+function modalOpen(title, text){
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-text').innerHTML = text;
+  document.getElementById('modal').classList.add('on');
+}
+function modalClose(){
+  document.getElementById('modal').classList.remove('on');
+}
+function modalOvl(e){
+  if(e.target===document.getElementById('modal')) modalClose();
+}
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape') modalClose();
+});
+
+// ── SEARCH ──
+function toggleSearch(){
+  var overlay = document.getElementById('search-overlay');
+  var input = document.getElementById('search-input');
+  if(overlay.style.display === 'none'){
+    overlay.style.display = 'block';
+    input.value = '';
+    document.getElementById('search-results').innerHTML = '';
+    input.focus();
+  } else {
+    overlay.style.display = 'none';
+  }
+}
+
+function buildSearchIndex(){
+  var index = [];
+  ['ciro','mo'].forEach(function(world){
+    D[world].sections.forEach(function(sec){
+      sec.subs.forEach(function(sub){
+        sub.items.forEach(function(item){
+          index.push({world:world, sec:sec.k, item:item});
+        });
+      });
+    });
+  });
+  return index;
+}
+
+var searchIndex = null;
+document.addEventListener('DOMContentLoaded', function(){
+  var input = document.getElementById('search-input');
+  input.addEventListener('input', function(){
+    if(!searchIndex) searchIndex = buildSearchIndex();
+    var q = this.value.toLowerCase().trim();
+    var results = document.getElementById('search-results');
+    if(!q){ results.innerHTML = ''; return; }
+    var matches = searchIndex.filter(function(e){
+      return e.item.t.toLowerCase().indexOf(q) !== -1 ||
+             (e.item.code && e.item.code.toLowerCase().indexOf(q) !== -1);
+    });
+    if(!matches.length){
+      results.innerHTML = '<div style="font-size:13px;color:#000;opacity:.5">No results.</div>';
+      return;
+    }
+    results.innerHTML = matches.slice(0,20).map(function(e){
+      var world = e.world === 'ciro' ? 'CP' : 'MO';
+      return '<div class="search-result" onclick="goToResult(\'' + e.world + '\',\'' + e.sec + '\',\'' + e.item.t.replace(/'/g,"\\'") + '\')" style="padding:10px 0;border-bottom:1px solid #000;cursor:pointer;font-size:13px;color:#000">' +
+        '<span style="opacity:.45;margin-right:12px">' + world + '</span>' +
+        (e.item.code ? '<span style="margin-right:12px">' + e.item.code + '</span>' : '') +
+        e.item.t + '</div>';
+    }).join('');
+  });
+  input.addEventListener('keydown', function(e){ if(e.key==='Escape') toggleSearch(); });
+});
+
+function goToResult(world, secKey, title){
+  toggleSearch();
+  // switch to correct world
+  showIdx(world);
+  // open the section
+  setTimeout(function(){
+    var l0 = document.querySelector('.l0[data-k="' + secKey + '"]');
+    if(l0) l0.click();
+    // scroll to item
+    setTimeout(function(){
+      var slug = title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+      var grp = document.getElementById('lbl-' + slug);
+      if(grp){
+        var right = document.getElementById('right');
+        var label = grp.querySelector('.proj-label');
+        var labelPad = label ? parseInt(window.getComputedStyle(label).paddingTop) : 34;
+        right.scrollTo({top: Math.max(0, grp.offsetTop + labelPad - 8), behavior:'smooth'});
+      }
+    }, 300);
+  }, 100);
+}
+
+showIdx('ciro');
+initScrollDot();
+</script>
+<div id="modal" onclick="modalOvl(event)">
+  <div id="modal-inner">
+    <span id="modal-close" onclick="modalClose()">&#x2715;</span>
+    <div id="modal-title"></div>
+    <div id="modal-text"></div>
+  </div>
+</div>
+</body>
+</html        >
