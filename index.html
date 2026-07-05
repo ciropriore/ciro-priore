@@ -302,27 +302,41 @@ body.mo-mode #left{border-right:1px solid #fff}
 
 /* ── MOBILE ── */
 @media (max-width:768px){
-  #wrap{grid-template-columns:1fr}
-  #left{height:100%;overflow-y:auto;border-right:none}
-  #right{display:none}
-  .l0{padding:12px 20px 4px}
-  .l1{padding:6px 20px 3px 32px}
-  .item{padding:4px 20px 4px 40px}
-  .item.on{padding-bottom:12px}
-  .item-desc{max-width:100%;padding-left:60px}
-  .item-more{padding-left:60px}
-  .item-code{width:60px}
-  .item-grid-mobile{display:none;margin:8px 0 4px 0;padding:0 20px 0 40px}
-  .item.on .item-grid-mobile{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
-  .item-grid-mobile .mob-cell{position:relative;overflow:hidden;border:1px solid #000;aspect-ratio:3/2;background:#fff}
-  .item-grid-mobile .mob-cell.v{grid-row:span 2;aspect-ratio:2/3}
-  .item-grid-mobile .mob-cell img,.item-grid-mobile .mob-cell video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-  .item-grid-mobile .mob-cell-empty{background:#fff;border:1px solid #000;aspect-ratio:3/2;position:relative}
-  .item-grid-mobile .mob-cell-empty::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom right,transparent calc(50% - .5px),#000 calc(50% - .5px),#000 calc(50% + .5px),transparent calc(50% + .5px))}
+  #wrap{
+    grid-template-columns:1fr;
+    grid-template-rows:50% 50%;
+    grid-template-areas:'left' 'right';
+  }
+  #left{
+    grid-area:left;
+    height:100%;
+    overflow-y:auto;
+    border-right:none;
+    border-bottom:1px solid #000;
+  }
+  #right{
+    grid-area:right;
+    height:100%;
+    overflow-y:auto;
+    display:block;
+    padding:8px;
+  }
+  .l0{padding:10px 16px 3px}
+  .l1{padding:5px 16px 2px 28px}
+  .item{padding:3px 16px 3px 36px}
+  .item.on{padding-bottom:8px}
+  .item-desc{max-width:100%;padding-left:52px;font-size:12px}
+  .item-more{padding-left:52px;font-size:12px}
+  .item-code{width:52px;font-size:12px}
+  .item-title{font-size:12px}
+  .item-sub{font-size:11px}
+  .l0,.l1{font-size:12px}
+  /* hide inline mobile grid — we use the right panel instead */
+  .item-grid-mobile{display:none !important}
   #tb{padding:0 16px}
   #bn{padding:0 16px}
-  .tbi{margin-right:14px}
-  .bni{margin-right:14px}
+  .tbi{margin-right:12px;font-size:12px}
+  .bni{margin-right:12px;font-size:12px}
   #search-overlay{padding:20px}
   #cp-page > div,#mo-page > div{grid-template-columns:1fr !important}
   #cp-page > div > div:first-child{border-right:none !important;border-bottom:1px solid #000}
@@ -330,9 +344,7 @@ body.mo-mode #left{border-right:1px solid #fff}
   #scroll-dot-left{display:none !important}
 }
 @media (max-width:768px){
-  body.mo-mode .item-grid-mobile .mob-cell{border:1px solid #fff;background:#000}
-  body.mo-mode .item-grid-mobile .mob-cell-empty{background:#000;border:1px solid #fff}
-  body.mo-mode .item-grid-mobile .mob-cell-empty::after{background:linear-gradient(to bottom right,transparent calc(50% - .5px),#fff calc(50% - .5px),#fff calc(50% + .5px),transparent calc(50% + .5px))}
+  body.mo-mode #left{border-bottom:1px solid #fff}
 }
 </style>
 </head>
@@ -399,10 +411,10 @@ body.mo-mode #left{border-right:1px solid #fff}
 </div>
 
 <div id="bn">
-  <span class="bni" id="bn-cp" onclick="showCP()">CP</span>
-  <span class="bni on" id="bn-cpidx" onclick="showIdx('ciro')">CP Index</span>
-  <span class="bni" id="bn-mo" onclick="showMO()">MO</span>
-  <span class="bni" id="bn-moidx" onclick="showIdx('mo')">MO Index</span>
+  <span class="bni" id="bn-cp" onclick="showCP()">Bio</span>
+  <span class="bni on" id="bn-cpidx" onclick="showIdx('ciro')">Academic Output</span>
+  <span class="bni" id="bn-mo" onclick="showMO()">Materia Ordinaria</span>
+  <span class="bni" id="bn-moidx" onclick="showIdx('mo')">Works</span>
   <span class="bn-gap"></span>
   <span class="bn-mail">ciro.priore@unina.it</span>
 </div>
@@ -1170,7 +1182,6 @@ function openFromGrid(item){
   if(moreEl) moreEl.style.display = 'inline-block';
 
   revealItem(item);
-  if(isMobile()) setTimeout(function(){ buildMobileGrid(item); }, 50);
 
   // scroll both cols after reflow
   var grp=document.getElementById('lbl-'+mkSlug(item.t));
@@ -1180,7 +1191,9 @@ function openFromGrid(item){
       var labelPad = label ? parseInt(window.getComputedStyle(label).paddingTop) : 34;
       rightCol.scrollTo({top:Math.max(0, getOffsetTop(grp,rightCol) + labelPad - 8),behavior:'smooth'});
     }
-    leftCol.scrollTo({top:Math.max(0,getOffsetTop(targetRow,leftCol)-100),behavior:'smooth'});
+    if(!isMobile()){
+      leftCol.scrollTo({top:Math.max(0,getOffsetTop(targetRow,leftCol)-100),behavior:'smooth'});
+    }
   },50);
 }
 
