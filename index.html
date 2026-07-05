@@ -888,7 +888,7 @@ function buildIdx(w){
           '<div class="item-line"><span class="item-code">'+(item.code||'')+'</span><span class="item-title">'+item.t+'</span></div>'+
           '<div class="item-sub">'+item.sub+'</div>'+
           (item.d && item.d.length>0 ? '<div class="item-desc">'+(item.d.length>180?item.d.substring(0,180)+'…':item.d)+'</div>' : '')+
-          (item.d && item.d.length>0 ? '<span class="item-more">more →</span>' : '')+
+          '<span class="item-more">more →</span>'+
           (item.link?'<a class="item-link" href="'+item.link+'" target="_blank" rel="noopener">read →</a>':'')+
           (item.related?(function(rel){return rel.split('|').map(function(r){return '<span class="item-related" data-rel="'+r.trim()+'">'+r.trim()+'</span>';}).join('');  })(item.related):'');
         // wire modal button
