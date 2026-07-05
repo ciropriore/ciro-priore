@@ -1103,9 +1103,7 @@ function buildGrid(w){
           subgrid.appendChild(el);
           slotCount++;
         });
-        // fill remainder of last row
-        var rem=slotCount%4;
-        if(rem!==0){ for(var f=0;f<4-rem;f++){ var ep=document.createElement('div'); ep.className='cell cell-empty h1'; subgrid.appendChild(ep); } }
+        // no fill for GL — don't add empty diagonal cells
         return;
       }
 
@@ -1231,7 +1229,7 @@ function buildItemCells(grid, item){
     var imgIdx = 0;
     layout.forEach(function(type){
       if(type === 'e'){
-        cells.push({type:'e'});
+        // skip empty cells — no diagonal placeholders
       } else {
         cells.push({type:type, src: imgs[imgIdx] || null, imgIdx: imgIdx});
         imgIdx++;
@@ -1245,15 +1243,13 @@ function buildItemCells(grid, item){
     }
   }
 
-  // Count slots — each cell occupies 1 column slot regardless of height (v spans 2 rows but 1 col)
-  var slotsUsed = cells.filter(function(c){ return c.type !== 'e_skip'; }).length;
-  // But we need to count actual column slots: v = 1 col, h = 1 col, e = 1 col
+  // Count slots — each cell occupies 1 column slot regardless of height
   slotsUsed = cells.length;
 
-  // Fill to next multiple of COLS
-  var rem = slotsUsed % COLS;
-  var fill = rem === 0 ? 0 : COLS - rem;
-  for(var f=0; f<fill; f++) cells.push({type:'e'});
+  // No fill — don't add empty diagonal cells
+  // var rem = slotsUsed % COLS;
+  // var fill = rem === 0 ? 0 : COLS - rem;
+  // for(var f=0; f<fill; f++) cells.push({type:'e'});
 
   // Build DOM synchronously
   cells.forEach(function(cellDef, ci){
