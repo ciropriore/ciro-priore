@@ -894,7 +894,7 @@ function buildIdx(w){
         // wire modal button
         (function(row,t,d,rel){
           var btn=row.querySelector('.item-more');
-          if(btn) btn.onclick=function(e){ e.stopPropagation(); modalOpen(t,d); };
+          if(btn) btn.onclick=function(e){ e.stopPropagation(); modalOpen(t, d && d.length > 0 ? d : 'This project page is currently being updated. Check back soon.'); };
           // wire all related buttons
           row.querySelectorAll('.item-related').forEach(function(btn){
             btn.onclick=function(e){
