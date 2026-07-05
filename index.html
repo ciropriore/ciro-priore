@@ -1157,20 +1157,20 @@ function openFromGrid(item){
   active=targetRow; activeItem=item;
   document.getElementById('idx').classList.add('has-active');
 
-  // show ongoing notice if no images
+  // show desc preview and always show more button
   var hasRealImgs = item.imgs && item.imgs.some(function(s){ return s && s.length > 5; });
   var descEl = targetRow.querySelector('.item-desc');
   var moreEl = targetRow.querySelector('.item-more');
+  var displayDesc = item.d && item.d.length > 0 ? item.d : (item.draft ? item.d : 'This project page is currently being updated.');
   if(!hasRealImgs && !item.draft && !item.noGrid){
     if(descEl) descEl.textContent = 'Work in progress.';
-    if(moreEl) moreEl.style.display = 'none';
   } else {
-    if(descEl) descEl.textContent = item.d ? item.d.substring(0,120) + (item.d.length > 120 ? '…' : '') : '';
-    if(moreEl) moreEl.style.display = item.d ? 'inline-block' : 'none';
+    if(descEl) descEl.textContent = displayDesc ? displayDesc.substring(0,120) + (displayDesc.length > 120 ? '…' : '') : '';
   }
+  if(moreEl) moreEl.style.display = 'inline-block';
 
   revealItem(item);
-  if(isMobile()) buildMobileGrid(item);
+  if(isMobile()) setTimeout(function(){ buildMobileGrid(item); }, 50);
 
   // scroll both cols after reflow
   var grp=document.getElementById('lbl-'+mkSlug(item.t));
@@ -1455,10 +1455,19 @@ function buildMobileGrid(item){
   var imgs = item.imgs || [];
   var layout = item.layout || [];
   var hasReal = imgs.some(function(s){ return s && s.length > 5; });
-  // find the item row
+  // find the item row — try data-item first, then data-t
   var rows = document.querySelectorAll('.item');
   var targetRow = null;
-  rows.forEach(function(r){ if(r.dataset && r.dataset.item === item.t) targetRow = r; });
+  rows.forEach(function(r){
+    if(r.dataset && (r.dataset.item === item.t || r.dataset.t === item.t)) targetRow = r;
+  });
+  if(!targetRow){
+    // fallback: find by title text
+    rows.forEach(function(r){
+      var titleEl = r.querySelector('.item-title');
+      if(titleEl && titleEl.textContent.trim() === item.t) targetRow = r;
+    });
+  }
   if(!targetRow) return;
 
   var grid = document.createElement('div');
